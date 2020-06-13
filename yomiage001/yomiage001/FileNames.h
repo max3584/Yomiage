@@ -14,6 +14,7 @@ private:
 public:
 	FileNames();
 	std::vector<std::string> filenames(std::string& dir_name, const std::string& extension) noexcept(false);
+	void close();
 
 };
 #endif

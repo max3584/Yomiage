@@ -1,9 +1,12 @@
 #include "pch.h"
 #include "FileNames.h"
 #include <Windows.h>
+#include <wchar.h>
 #include <vector>
 #include <string>
 #include <stdexcept>
+
+#define buffer_size 260
 
 FileNames::FileNames()
 {
@@ -18,7 +21,7 @@ std::vector<std::string> FileNames::filenames(std::string & dir_name, const std:
 	//ägí£éqÇÃê›íË
 	const char* search_name = (dir_name + "\\*." + extension).c_str();
 
-	hFind = FindFirstFile(search_name, &win32fd);
+	hFind = FindFirstFile((LPCWSTR)search_name, &win32fd);
 
 	if (hFind == INVALID_HANDLE_VALUE) {
 		throw std::runtime_error("file not found");
@@ -27,9 +30,22 @@ std::vector<std::string> FileNames::filenames(std::string & dir_name, const std:
 	do {
 		if (win32fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
 		}
-		else {
-			file_names.push_back();
-			printf("%s\n", file_names.back().c_str());
+		else 
+		{
+			// å^ÇÃïœä∑
+			// inits
+			const wchar_t *wcString = win32fd.cFileName;
+			char mbs[buffer_size];
+			size_t count;
+			mbstate_t state;
+			errno_t err;
+			
+			// ïœä∑é¿çs
+			err = wcstombs_s(&count, mbs, wcString, buffer_size);
+
+			// îzóÒÇ…äiî[(vector)
+			file_names.push_back(std::string(mbs));
+			//printf("%s\n", file_names.back().c_str());
 
 		}
 	} while (FindNextFile(hFind, &win32fd));
@@ -37,4 +53,9 @@ std::vector<std::string> FileNames::filenames(std::string & dir_name, const std:
 	FindClose(hFind);
 
 	return file_names;
+}
+
+void FileNames::close()
+{
+	close();
 }

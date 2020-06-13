@@ -11,6 +11,8 @@
 
 int main(std::string folderPath)
 {
+
+
 	std::string list;				// ファイルの一覧を確保するための領域
 	std::string last_comment;		// 内容を保存するための領域で(一番最後に取得したものを保存するためのもの)
 
@@ -30,13 +32,13 @@ int main(std::string folderPath)
 	std::stringstream ss;
 	ss << "20" << local_time.tm_year + 1900 << local_time.tm_mon + 1 << local_time.tm_mday;
 
-	std::string s = ss.str();
+	//folderPath += ss.str();
 
 	int millisecond = 100 * 1000; // n * 1000で秒単位での設定が可能
 	
-	for (const std::string& list : fn->filenames(folderPath, "txt"))
+	for (const std::string& list : fn->filenames(folderPath.append(ss.str()), "txt"))
 	{
-		if (list.compare(0, 15, "ChatLog" + s)) {
+		if (list.compare(0, 15, "ChatLog" + ss.str())) {
 			std::ifstream ifs(folderPath + list);
 			std::string str; //格納用
 
@@ -51,6 +53,7 @@ int main(std::string folderPath)
 		}
 	}
 	printf("%s",(char*)last_comment.c_str());
+	return 0;
 	/*
 	while (true) {
 
