@@ -9,12 +9,12 @@
 #include "BouyomiSocketRequest.h"
 
 
-int main(std::string folderPath)
+int main(std::string folderPath,std::string extension , boolean timestamp)
 {
 
 
-	std::string list;				// ファイルの一覧を確保するための領域
-	std::string last_comment;		// 内容を保存するための領域で(一番最後に取得したものを保存するためのもの)
+	std::string list;		// ファイルの一覧を確保するための領域
+	std::vector<std::string> last_comment;		// 内容を保存するための領域で(一番最後に取得したものを保存するためのもの)
 
 	// ファイル名出力用
 	FileNames* fn = new FileNames;
@@ -35,8 +35,18 @@ int main(std::string folderPath)
 	//folderPath += ss.str();
 
 	int millisecond = 100 * 1000; // n * 1000で秒単位での設定が可能
-	
-	for (const std::string& list : fn->filenames(folderPath.append(ss.str()), "txt"))
+
+	std::stringstream folder_format_path;
+	folder_format_path << folderPath;
+
+	if (timestamp) 
+	{
+		folder_format_path << ss.str();
+	}
+
+	folder_format_path << "\\*";
+
+	for (const std::string& list : fn->filenames(folder_format_path.str() , extension))
 	{
 		if (list.compare(0, 15, "ChatLog" + ss.str())) {
 			std::ifstream ifs(folderPath + list);
@@ -46,13 +56,13 @@ int main(std::string folderPath)
 				// fail
 				return -1;
 			}
-			while (getline(ifs, str)) {
-				last_comment = (char*)str.c_str();
+			while (std::getline(ifs, str, '\t')) {
+				last_comment.push_back(str);
 			}
 			break;
 		}
 	}
-	printf("%s",(char*)last_comment.c_str());
+	printf("%s",last_comment[last_comment.size() - 1].c_str());
 	return 0;
 	/*
 	while (true) {

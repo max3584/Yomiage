@@ -16,7 +16,6 @@ public:
 	BouyomiSocketRequest();
 	int request(int argc, char *argv[]);
 	char* FileRead(char* file);
-	void close();
 };
 
 #endif

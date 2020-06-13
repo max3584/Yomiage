@@ -86,7 +86,3 @@ inline char* BouyomiSocketRequest::FileRead(char* file)
 		return (char*)str.c_str();
 	}
 }
-
-void BouyomiSocketRequest::close()
-{
-}
