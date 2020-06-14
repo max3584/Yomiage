@@ -1,8 +1,6 @@
 #include "pch.h"
 
-
 #ifndef _BouyomiSocketRequest_H_
-
 #define _BouyomiSocketRequest_H_
 
 /*
@@ -14,7 +12,7 @@ private:
 	BouyomiSocketRequest* bsr_p;
 public:
 	BouyomiSocketRequest();
-	int request(int argc, char *argv[]);
+	int request(char* meta_msg);
 	char* FileRead(char* file);
 };
 

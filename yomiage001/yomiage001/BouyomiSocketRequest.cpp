@@ -10,7 +10,7 @@ BouyomiSocketRequest::BouyomiSocketRequest()
 {
 }
 
-inline int BouyomiSocketRequest::request(int argc, char * argv[])
+inline int BouyomiSocketRequest::request(char* meta_msg)
 {
 	sockaddr_in server;
 	WSADATA     wsadata;
@@ -21,20 +21,8 @@ inline int BouyomiSocketRequest::request(int argc, char * argv[])
 	char   *msg;
 
 	//コマンドライン引数処理
-	switch (argc) {
-	case 2:
-		msg = argv[1];
-		break;
-	case 6:
-		speed = atoi(argv[1]);
-		tone = atoi(argv[2]);
-		volume = atoi(argv[3]);
-		voice = atoi(argv[4]);
-		msg = argv[5];
-		break;
-	default:
-		return -1;
-	}
+	msg = msg;
+	
 	len = (long)strlen(msg);
 
 	//送信するデータの生成(文字列を除いた先頭の部分)
@@ -79,7 +67,8 @@ inline char* BouyomiSocketRequest::FileRead(char* file)
 	std::fstream ifs(file);
 	std::string str; //格納用
 
-	if (ifs.fail()) {
+	if (ifs.fail()) 
+	{
 		return (char*)"Faild to open File....";
 	}
 	while (getline(ifs, str)) {
