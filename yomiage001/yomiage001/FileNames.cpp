@@ -2,7 +2,6 @@
 #include "FileNames.h"
 #include <iostream>
 #include <Windows.h>
-#include <winnt.h>
 #include <wchar.h>
 #include <vector>
 #include <string>
@@ -20,8 +19,8 @@ std::vector<std::string> FileNames::filenames(const std::string dir_name, const 
 {
 
 	// init fields;
-	HANDLE hFind = new HANDLE;
-	WIN32_FIND_DATAA win32fd;//defined at Windwos.h
+	HANDLE hFind = new HANDLE();
+	WIN32_FIND_DATA *win32fd = nullptr;//defined at Windwos.h
 	std::vector<std::string> file_names;
 
 	// stock valiable
@@ -32,7 +31,7 @@ std::vector<std::string> FileNames::filenames(const std::string dir_name, const 
 	//ägí£éqÇÃê›íË
 	//LPCSTR search_name = stock.str().c_str();
 
-	hFind = FindFirstFile(stock.str().c_str(), &win32fd);
+	hFind = FindFirstFile(stock.str().c_str(), win32fd);
 
 	if (hFind == INVALID_HANDLE_VALUE) 
 	{
@@ -40,20 +39,20 @@ std::vector<std::string> FileNames::filenames(const std::string dir_name, const 
 	}
 
 	do {
-		if (win32fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) 
+		if (win32fd->dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) // Microsoft C++ ÇÃó·äO std::runtime_error ÉnÉìÉhÉãÇ≥ÇÍÇ»Ç¢ó·äO
 		{
 
 		}
 		else 
 		{
 
-			// îzóÒÇ…äiî[(vector)
-			file_names.push_back(std::string(win32fd.cFileName));
+			// îzóÒÇ…ÉtÉ@ÉCÉãñºÇäiî[(vector)
+			file_names.push_back(std::string(win32fd->cFileName));
 
 			//printf("%s\n", file_names.back().c_str());
 
 		}
-	} while (FindNextFile(hFind, &win32fd));
+	} while (FindNextFile(hFind, win32fd));
 
 	FindClose(hFind);
 

@@ -7,14 +7,14 @@
 #include <fstream>
 #include "FileNames.h"
 #include "BouyomiSocketRequest.h"
-#include "encodeConvert.h"
+//#include "encodeConvert.h"
 
 
 int main(int argc, char *argv[])
 {
 
 	//encode comvert
-	encodeConvert* ec = new encodeConvert;
+	//encodeConvert* ec = new encodeConvert;
 
 	int b = atoi(argv[3]);
 	std::istringstream iss = std::istringstream(argv[3]);
@@ -24,16 +24,16 @@ int main(int argc, char *argv[])
 	boolean timestamp = b;
 	// encode converts
 	// 文字コード変換
-	std::string folderPath = ec->multi_for_utf8_winapi(argv[1]);
-	std::string extension = ec->multi_for_utf8_winapi(argv[2]);
+	// 変数変更
+	std::string folderPath = argv[1];
+	std::string extension = argv[2];
 
 	//printf(u8"%s\\.%s\tflgs:%d", folder.c_str(), extension.c_str(), argv[3]);
 
-	std::u32string list;		// ファイルの一覧を確保するための領域
 	std::vector<std::string> last_comment;		// 内容を保存するための領域で(一番最後に取得したものを保存するためのもの)
 
 	// ファイル名出力用
-	FileNames* fn = new FileNames;
+	FileNames* fn = new FileNames();
 	//　棒読みちゃんへの転送と読み上げ用
 	//BouyomiSocketRequest* bsr = new BouyomiSocketRequest;
 	
@@ -52,6 +52,7 @@ int main(int argc, char *argv[])
 
 	int millisecond = 100 * 1000; // n * 1000で秒単位での設定が可能
 
+	//フォルダーパスのフォーマットを整える処理
 	std::stringstream folder_format_path;
 	folder_format_path << folderPath;
 
@@ -61,6 +62,8 @@ int main(int argc, char *argv[])
 	}
 
 	folder_format_path << "*";
+
+	// end format
 
 	std::vector <std::string> folder_name_lists = fn->filenames(folder_format_path.str(), extension);
 
