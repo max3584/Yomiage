@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "FileNames.h"
+#include "FileNames.hh"
 #include <iostream>
 #include <Windows.h>
 #include <wchar.h>
@@ -20,32 +20,32 @@ std::vector<std::string> FileNames::filenames(const std::string dir_name, const 
 
 	// init fields;
 	HANDLE hFind = new HANDLE();
-	WIN32_FIND_DATA *win32fd = nullptr;//defined at Windwos.h
+	WIN32_FIND_DATA *win32fd = new WIN32_FIND_DATA();//defined at Windwos.h
 	std::vector<std::string> file_names;
 
 	// stock valiable
 	std::stringstream stock;
 
-	stock << dir_name.c_str() << "." << extension.c_str();
+	stock << dir_name.c_str() << "*." << extension.c_str();
 
-	//拡張子の設定
-	//LPCSTR search_name = stock.str().c_str();
+	std::cout << "path:test:" << stock.str() << std::endl;
 
 	hFind = FindFirstFile(stock.str().c_str(), win32fd);
 
-	if (hFind == INVALID_HANDLE_VALUE) 
+	if (hFind == INVALID_HANDLE_VALUE)
 	{
-		throw std::runtime_error("file not found");
+		std::cout << "fall" << std::endl;
+		return {"NOT FILE FOUND"};
 	}
 
 	do {
 		if (win32fd->dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) // Microsoft C++ の例外 std::runtime_error ハンドルされない例外
 		{
-
+			printf("debug1:%s (DIR)\n", win32fd->cFileName);
 		}
 		else 
 		{
-
+			printf("debug1:%s\n", win32fd->cFileName);
 			// 配列にファイル名を格納(vector)
 			file_names.push_back(std::string(win32fd->cFileName));
 
@@ -56,8 +56,17 @@ std::vector<std::string> FileNames::filenames(const std::string dir_name, const 
 
 	FindClose(hFind);
 
+	//debug
+	/*
+	for (int i = 0; i < file_names.size(); i++) {
+		std::cout << file_names[i] << std::endl;
+	}
+	*/
+
+
 	return file_names;
 }
+
 /*
 std::vector<std::string> FileNames::getFileName(std::string folderPath, std::vector<std::string> &file_names)
 {

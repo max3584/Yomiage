@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "BouyomiSocketRequest.h"
+#include "BouyomiSocketRequest.hh"
 #include <iostream>
 #include <fstream>
 #include <string>
