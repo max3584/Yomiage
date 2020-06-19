@@ -5,13 +5,22 @@
 #include <time.h>
 #include <sstream>
 #include <fstream>
+<<<<<<< Updated upstream
 #include "FileNames.h"
 #include "BouyomiSocketRequest.h"
 //#include "encodeConvert.h"
+=======
+#include "FileNames.hh"
+#include "BouyomiSocketRequest.hh"
+#include "TimeStamp.hh"
+#include "ConvertEncode.h"
+#include "MyFunction.h"
+>>>>>>> Stashed changes
 
 
 int main(int argc, char *argv[])
 {
+	setlocale(LC_ALL, "");
 
 	//encode comvert
 	//encodeConvert* ec = new encodeConvert;
@@ -28,9 +37,13 @@ int main(int argc, char *argv[])
 	std::string folderPath = argv[1];
 	std::string extension = argv[2];
 
-	//printf(u8"%s\\.%s\tflgs:%d", folder.c_str(), extension.c_str(), argv[3]);
+	std::string searchFileName = argv[5];
 
-	std::vector<std::string> last_comment;		// 内容を保存するための領域で(一番最後に取得したものを保存するためのもの)
+	//printf(u8"%s\\.%s\tflgs:%d", folder.c_str(), extension.c_str(), argv[3]);
+	
+	
+	// 内容を保存するための領域
+	std::vector<std::vector<std::string>> userDatas;		
 
 	// ファイル名出力用
 	FileNames* fn = new FileNames();
@@ -53,8 +66,14 @@ int main(int argc, char *argv[])
 	int millisecond = 100 * 1000; // n * 1000で秒単位での設定が可能
 
 	//フォルダーパスのフォーマットを整える処理
+<<<<<<< Updated upstream
 	std::stringstream folder_format_path;
 	folder_format_path << folderPath;
+=======
+	std::string folder_format_path;
+
+	folder_format_path += folderPath + searchFileName;
+>>>>>>> Stashed changes
 
 	if (timestamp) 
 	{
@@ -63,16 +82,79 @@ int main(int argc, char *argv[])
 
 	folder_format_path << "*";
 
+	std::cout << "dayDebug:" << ts->lastDays(6) << std::endl;
+
 	// end format
+<<<<<<< Updated upstream
+=======
+	// ファイル名のリストを入れておくための領域
+	std::vector <std::string> folder_name_lists;
+	// exceptions try
+	try 
+	{
+		folder_name_lists = fn->filenames(folder_format_path, extension);
+		int day = 1, dayflg = 1;
+		int mon = ts->getMonth(), monthflg = 0;
+		int year = 0, yearflg = 0;
+
+		std::cout << "monthdebug:" << mon << std::endl;
+
+		while(!folder_name_lists[0].compare("NOT FILE FOUND")) {
+
+			if (year > 50) {
+				throw std::runtime_error("not file found exception");
+			}
+
+			if (timestamp[1])
+			{
+
+				if (day > ts->lastDays(mon)) {
+					std::cout << "lastday:true" << std::endl;
+					day = 1;
+					dayflg = 0;
+					monthflg = 1;
+					mon++;
+					if (mon > 12) {
+						mon = 1;
+						monthflg = 0;
+						yearflg = 1;
+						year++;
+					}
+				}
+
+				// 1日削って再編成
+				folder_format_path = folderPath + searchFileName + ts->nday(yearflg, monthflg, dayflg, false);
+
+				std::cout << "debug1:" << folder_format_path << std::endl;
+
+				dayflg = 1;
+				monthflg = 0;
+				yearflg = 0;
+
+				// 再度チェック
+				folder_name_lists = fn->filenames(folder_format_path, extension);
+				day++;
+			}
+			else 
+			{
+				// 一致するファイルがないためここで処理を終了させる
+				std::cout << "not file found exception" << std::endl;
+				return -1;
+			}
+
+		}
+>>>>>>> Stashed changes
 
 	std::vector <std::string> folder_name_lists = fn->filenames(folder_format_path.str(), extension);
 
+	// ファイルの中身を読み取る処理
 	for (const std::string& folder_name : folder_name_lists)
 	{
 		if (folder_name.compare(0, 15, "ChatLog" + ss.str())) {
 			std::ifstream ifs(folderPath + folder_name);
 			std::string str; //格納用
 
+<<<<<<< Updated upstream
 			if (ifs.fail()) {
 				// fail
 				return -1;
@@ -82,11 +164,49 @@ int main(int argc, char *argv[])
 			}
 			break;
 		}
+=======
+		std::cout << folder_name << "\n" << std::endl;
+		
+		std::wifstream ifs(folderPath + folder_name);
+		
+
+		if (ifs.fail()) 
+		{
+			// fail
+			std::cout << "failed" << std::endl;				//debug
+			return -1;
+		}
+		
+		ifs.imbue(locale(locale::empty(), new codecvt_utf16<wchar_t, 0x10ffff, consume_header>));
+		std::wstring str((istreambuf_iterator<wchar_t>(ifs)), istreambuf_iterator<wchar_t>()); // 格納用
+	
+
+		std::wcout << "debug:\tsize:" << str.size() << "\ndata:" << str.data()<< std::endl;
+
+		ConvertEncode* convert = new ConvertEncode;
+		MyFunction* funcA = new MyFunction;
+		
+
+		// データ一覧が格納されている
+		userDatas = funcA->splitt(convert->wide_to_multi_winapi(str), ts->strftoday("%Y-%m-%d"));
+
+		
+
+>>>>>>> Stashed changes
 	}
 
 	delete fn;
 	//delete bsr;
-	printf("%s",last_comment[last_comment.size() - 1].c_str());
+
+	for (int i = 0; i < userDatas.size(); i++)
+	{
+		std::cout << "userData Number[" << i << "]";
+		for (int j = 0; j < userDatas[i].size(); j++) 
+		{
+			std::cout << "datas:\n [" << j << "]" << userDatas[i][j] << std::endl;
+		}
+		std::cout << "\n";
+	}
 	return 0;
 	/*
 	while (true) {
