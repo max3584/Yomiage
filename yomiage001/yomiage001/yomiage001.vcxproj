@@ -95,6 +95,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -151,38 +152,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-<<<<<<< Updated upstream
-    <ClInclude Include="encodeConvert.h" />
-=======
     <ClInclude Include="ConvertEncode.h" />
     <ClInclude Include="MyFunction.h" />
     <ClInclude Include="MyMath.h" />
->>>>>>> Stashed changes
     <ClInclude Include="pch.h" />
+    <ClInclude Include="TimeStamp.hh" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BouyomiSocketRequest.cpp">
-      <UseUnicodeForAssemblerListing Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</UseUnicodeForAssemblerListing>
-    </ClCompile>
-<<<<<<< Updated upstream
-    <ClCompile Include="BouyomiSocketRequest.h" />
-    <ClCompile Include="encodeConvert.cpp" />
-    <ClCompile Include="FileNames.cpp" />
-    <ClCompile Include="FileNames.h" />
-=======
-    <ClCompile Include="BouyomiSocketRequest.hh" />
     <ClCompile Include="ConvertEncode.cpp" />
     <ClCompile Include="FileNames.cpp" />
     <ClCompile Include="FileNames.hh" />
     <ClCompile Include="MyFunction.cpp" />
     <ClCompile Include="MyMath.cpp" />
->>>>>>> Stashed changes
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TimeStamp.cpp" />
     <ClCompile Include="yomiage001.cpp" />
   </ItemGroup>
   <ItemGroup>

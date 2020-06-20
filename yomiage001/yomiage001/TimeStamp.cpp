@@ -1,6 +1,8 @@
+#pragma once
+
 #include "pch.h"
 #include "TimeStamp.hh"
-#include "MyMath.h"
+
 
 #define default_format "%Y%m%d"
 

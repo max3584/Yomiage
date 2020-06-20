@@ -1,9 +1,13 @@
+#pragma once
+
 #include "pch.h"
 #include <iostream>
 #include <string>
 #include <time.h>
 #include <fstream>
 #include <sstream>
+
+#include "MyMath.h"
 
 #ifndef _TimeStamp_H_
 #define _TimeStamp_H_
