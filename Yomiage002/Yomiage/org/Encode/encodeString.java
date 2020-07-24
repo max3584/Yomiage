@@ -43,24 +43,22 @@ public class encodeString {
 			return null;
 		}
 	}
-	
+
 	public String encodeUTF8(final String src) {
-		try {
-			byte[] encode = src.getBytes(StandardCharsets.UTF_8.toString());
-			
-			return new String(encode, "UTF-8");
-		} catch(UnsupportedEncodingException e) {
-			return null;
-		}
+		
+		byte[] encode = src.getBytes(Charset.forName("UTF-8"));
+
+		return new String(encode, Charset.forName("UTF-8"));
+
 	}
-	
+
 	public String encodeWindows31J(final String src) {
 		try {
 			final String encodeSelect = "windows-31J";
 			byte[] encode = src.getBytes(Charset.forName(encodeSelect));
-			
+
 			return new String(encode, encodeSelect);
-		}catch(UnsupportedEncodingException e) {
+		} catch (UnsupportedEncodingException e) {
 			return null;
 		}
 	}

@@ -28,7 +28,7 @@ public class DBAccess implements DataBaseAccess {
 	 * @param url       jdbc:[DataBaseName].URL の書式で書くと処理できます
 	 */
 
-	public DBAccess(String className, String url) {
+	public DBAccess(String url) {
 
 		String comment = "disttributions....";
 

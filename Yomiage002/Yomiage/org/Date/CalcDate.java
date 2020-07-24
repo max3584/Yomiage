@@ -58,7 +58,6 @@ public class CalcDate {
 	}
 	
 	// month calcs
-	
 	public int prevMonth(int num) {
 		this.month -= num;
 		if(this.month >= 0) {
@@ -101,15 +100,14 @@ public class CalcDate {
 	public String getCalcData() {
 		Calendar newDate = Calendar.getInstance();
 		newDate.set(this.year, this.month, this.day, this.hour, this.min, this.sec);
-		
-		return this.sdf.format(newDate);
+		return this.sdf.format(newDate.getTime());
 	}
 	
 	public String getCalcData(String format) {
 		Calendar newDate = Calendar.getInstance();
 		newDate.set(this.year, this.month, this.day, this.hour, this.min, this.sec);
 		
-		return new SimpleDateFormat(format).format(newDate);
+		return new SimpleDateFormat(format).format(newDate.getTime());
 	}
 
 	//gettear and setter

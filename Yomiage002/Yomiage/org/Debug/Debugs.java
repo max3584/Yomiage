@@ -6,7 +6,7 @@ import org.Datas.*;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,7 +33,7 @@ public class Debugs {
 			// System.out.println(dir);
 			
 			// 読み取りに必要なクラス
-			FileRead fr = new FileRead(dir);
+			FileRead fr = new FileRead(dir, StandardCharsets.UTF_8);
 			// 読み取り機構
 			for (String msg : fr.Reads()) {
 				String[] dump = td.TabInsert(msg);

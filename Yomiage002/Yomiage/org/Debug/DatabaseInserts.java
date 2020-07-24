@@ -20,8 +20,6 @@ public class DatabaseInserts {
 		// init use datas
 		// directory;
 		String dir = "";
-		// database init
-		String fe = "org.sqlite.JDBC.class";
 
 		String[] fileName = null;
 		try {
@@ -60,8 +58,7 @@ public class DatabaseInserts {
 			RequestTime rt = new RequestTime();
 
 			// databaseに入れるかの作業･･･?
-			DBAccess dba = new DBAccess(fe,
-					"JDBC:sqlite:K:\\DB\\Storage\\ProgramContesnts\\YomiageDatas\\controlData.db");
+			DBAccess dba = new DBAccess("JDBC:sqlite:K:\\DB\\Storage\\ProgramContesnts\\YomiageDatas\\controlData.db");
 			int row = frt.size();
 
 			for (int i = 0; i < row; i++)

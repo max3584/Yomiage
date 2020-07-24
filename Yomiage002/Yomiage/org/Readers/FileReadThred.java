@@ -2,6 +2,7 @@ package org.Readers;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import org.Datas.DataLists;
@@ -32,7 +33,7 @@ public class FileReadThred implements Runnable {
 		// datalist init(一時保存用)
 		ArrayList<DataLists> dl = new ArrayList<DataLists>();
 		try {
-			FileRead fr = new FileRead(this.dir);
+			FileRead fr = new FileRead(this.dir, StandardCharsets.UTF_8);
 			TabDatas td = new TabDatas();
 			// 読み取り機構
 			for (String msg : fr.Reads()) {
