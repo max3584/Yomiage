@@ -1,5 +1,9 @@
-//ƒGƒ‰[‘Îô‚µ‚Ä‚Ü‚¹‚ñiOOG
-//ƒRƒ“ƒpƒCƒ‹•û–@
+/*
+https://chi.usamimi.info/Program/Application/BouyomiChan
+ copyrihgt 2006-2012 ã¿ã¡ã‚ã
+*/
+//ã‚¨ãƒ©ãƒ¼å¯¾ç­–ã—ã¦ã¾ã›ã‚“ï¼ˆï¼¾ï¼¾ï¼›
+//ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«æ–¹æ³•
 //Borland C++ > bcc32 BouyomiChanSample.cpp
 //Visual  C++ > cl    BouyomiChanSample.cpp ws2_32.lib
 #include <stdio.h>
@@ -14,10 +18,10 @@ int main(int argc, char *argv[]) {
 	long   len;
 	char   *msg;
 	/*
-	//ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“ˆø”ˆ—
+	//ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å¼•æ•°å‡¦ç†
 	switch(argc) {
 		case 1:
-			msg    = "ƒeƒXƒg‚Å[‚·";
+			msg    = "ãƒ†ã‚¹ãƒˆã§ãƒ¼ã™";
 			break;
 		case 2:
 			msg    = argv[1];
@@ -30,36 +34,36 @@ int main(int argc, char *argv[]) {
 			msg    = argv[5];
 			break;
 		default:
-			printf("g—p–@1>BouyomiChanSample •¶Í\r\n");
-			printf("g—p–@2>BouyomiChanSample ‘¬“x(50-300) ‰¹’ö(50-200) ‰¹—Ê(0-100) º¿(0-8) •¶Í\r\n");
+			printf("ä½¿ç”¨æ³•1>BouyomiChanSample æ–‡ç« \r\n");
+			printf("ä½¿ç”¨æ³•2>BouyomiChanSample é€Ÿåº¦(50-300) éŸ³ç¨‹(50-200) éŸ³é‡(0-100) å£°è³ª(0-8) æ–‡ç« \r\n");
 			return -1;
 	}
 	*/
 	msg = "test";
 	len = (long)strlen(msg);
 
-	//‘—M‚·‚éƒf[ƒ^‚Ì¶¬(•¶š—ñ‚ğœ‚¢‚½æ“ª‚Ì•”•ª)
+	//é€ä¿¡ã™ã‚‹ãƒ‡ãƒ¼ã‚¿ã®ç”Ÿæˆ(æ–‡å­—åˆ—ã‚’é™¤ã„ãŸå…ˆé ­ã®éƒ¨åˆ†)
 	char buf[15];
-	*((short*)&buf[0])  = 0x0001; //[0-1]  (16Bit) ƒRƒ}ƒ“ƒh          i 0:ƒƒbƒZ[ƒW“Ç‚İã‚°j
-	*((short*)&buf[2])  = speed;  //[2-3]  (16Bit) ‘¬“x              i-1:–_“Ç‚İ‚¿‚á‚ñ‰æ–Êã‚Ìİ’èj
-	*((short*)&buf[4])  = tone;   //[4-5]  (16Bit) ‰¹’ö              i-1:–_“Ç‚İ‚¿‚á‚ñ‰æ–Êã‚Ìİ’èj
-	*((short*)&buf[6])  = volume; //[6-7]  (16Bit) ‰¹—Ê              i-1:–_“Ç‚İ‚¿‚á‚ñ‰æ–Êã‚Ìİ’èj
-	*((short*)&buf[8])  = voice;  //[8-9]  (16Bit) º¿              i 0:–_“Ç‚İ‚¿‚á‚ñ‰æ–Êã‚Ìİ’èA1:—«1A2:—«2A3:’j«1A4:’j«2A5:’†«A6:ƒƒ{ƒbƒgA7:‹@ŠB1A8:‹@ŠB2A10001`:SAPI5j
-	*((char* )&buf[10]) = 2;      //[10]   ( 8Bit) •¶š—ñ‚Ì•¶šƒR[ƒhi 0:UTF-8, 1:Unicode, 2:Shift-JISj
-	*((long* )&buf[11]) = len;    //[11-14](32Bit) •¶š—ñ‚Ì’·‚³
+	*((short*)&buf[0])  = 0x0001; //[0-1]  (16Bit) ã‚³ãƒãƒ³ãƒ‰          ï¼ˆ 0:ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸èª­ã¿ä¸Šã’ï¼‰
+	*((short*)&buf[2])  = speed;  //[2-3]  (16Bit) é€Ÿåº¦              ï¼ˆ-1:æ£’èª­ã¿ã¡ã‚ƒã‚“ç”»é¢ä¸Šã®è¨­å®šï¼‰
+	*((short*)&buf[4])  = tone;   //[4-5]  (16Bit) éŸ³ç¨‹              ï¼ˆ-1:æ£’èª­ã¿ã¡ã‚ƒã‚“ç”»é¢ä¸Šã®è¨­å®šï¼‰
+	*((short*)&buf[6])  = volume; //[6-7]  (16Bit) éŸ³é‡              ï¼ˆ-1:æ£’èª­ã¿ã¡ã‚ƒã‚“ç”»é¢ä¸Šã®è¨­å®šï¼‰
+	*((short*)&buf[8])  = voice;  //[8-9]  (16Bit) å£°è³ª              ï¼ˆ 0:æ£’èª­ã¿ã¡ã‚ƒã‚“ç”»é¢ä¸Šã®è¨­å®šã€1:å¥³æ€§1ã€2:å¥³æ€§2ã€3:ç”·æ€§1ã€4:ç”·æ€§2ã€5:ä¸­æ€§ã€6:ãƒ­ãƒœãƒƒãƒˆã€7:æ©Ÿæ¢°1ã€8:æ©Ÿæ¢°2ã€10001ï½:SAPI5ï¼‰
+	*((char* )&buf[10]) = 2;      //[10]   ( 8Bit) æ–‡å­—åˆ—ã®æ–‡å­—ã‚³ãƒ¼ãƒ‰ï¼ˆ 0:UTF-8, 1:Unicode, 2:Shift-JISï¼‰
+	*((long* )&buf[11]) = len;    //[11-14](32Bit) æ–‡å­—åˆ—ã®é•·ã•
 	
-	//Ú‘±æw’è—p\‘¢‘Ì‚Ì€”õ
+	//æ¥ç¶šå…ˆæŒ‡å®šç”¨æ§‹é€ ä½“ã®æº–å‚™
 	server.sin_addr.S_un.S_addr = inet_addr("127.0.0.1");
 	server.sin_port             = htons(50001);
 	server.sin_family           = AF_INET;
 
-	//Winsock2‰Šú‰»
+	//Winsock2åˆæœŸåŒ–
 	WSAStartup(MAKEWORD(1, 1), &wsadata);
 
-	//ƒ\ƒPƒbƒgì¬
+	//ã‚½ã‚±ãƒƒãƒˆä½œæˆ
 	sock = socket(AF_INET, SOCK_STREAM, 0);
 
-	//ƒT[ƒo‚ÉÚ‘±
+	//ã‚µãƒ¼ãƒã«æ¥ç¶š
 	connect(sock, (struct sockaddr *)&server, sizeof(server));
 
 	//debug
@@ -68,14 +72,14 @@ int main(int argc, char *argv[]) {
 
 	*/
 
-	//ƒf[ƒ^‘—M
+	//ãƒ‡ãƒ¼ã‚¿é€ä¿¡
 	send(sock, buf, 15, 0);
 	send(sock, msg, len, 0);
 
-	//ƒ\ƒPƒbƒgI—¹
+	//ã‚½ã‚±ãƒƒãƒˆçµ‚äº†
 	closesocket(sock);
 	
-	//Winsock2I—¹
+	//Winsock2çµ‚äº†
 	WSACleanup();
 	
 	return 0;
