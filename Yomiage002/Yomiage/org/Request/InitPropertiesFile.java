@@ -31,6 +31,10 @@ public class InitPropertiesFile {
 			e.printStackTrace();
 		}
 	}
+	
+	public void Change(String value) {
+		this.properties.setProperty("Read", value);
+	}
 
 	// getter and setter
 	public String getFileName() {
@@ -48,7 +52,4 @@ public class InitPropertiesFile {
 	public void setProperties(Properties properties) {
 		this.properties = properties;
 	}
-	
-	
-	
 }

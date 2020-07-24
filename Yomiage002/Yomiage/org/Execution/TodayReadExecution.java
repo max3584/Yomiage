@@ -12,7 +12,6 @@ import org.CLI.CEExpress;
 import org.CLI.MenuData.MenuExcute.easySetup;
 import org.Datas.DataLists;
 import org.Date.CalcDate;
-import org.Encode.encodeString;
 import org.Readers.FileRead;
 import org.Readers.Directory.DirectoryUseSearch;
 
@@ -102,9 +101,9 @@ public class TodayReadExecution {
 					if (!natuData.getNo().equals(dl.getNo())) {
 
 						// 棒読みに送るための処理を記述
-						if (properties.indexOf(natuData.getGroup()) > -1 | properties.equals("all")) {
+						if (properties.indexOf(natuData.getGroup()) > -1 | properties.equals("any")) {
 							// console execute
-							System.out.println(String.format("%s:%s",natuData.getUser(), natuData.getComment()));
+							//System.out.println(String.format("%s:%s",natuData.getUser(), natuData.getComment()));
 							// to C Packet Request Execute
 							cee.ConsoleCommand(String.format("%s:%s", natuData.getUser(), natuData.getComment()));
 						}
