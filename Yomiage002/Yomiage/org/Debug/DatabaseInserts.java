@@ -1,6 +1,7 @@
 package org.Debug;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -72,6 +73,12 @@ public class DatabaseInserts {
 
 			dba.close();
 		} catch (RejectedExecutionException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
 		} finally {
 			es.shutdown();

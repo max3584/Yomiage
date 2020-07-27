@@ -21,6 +21,7 @@ public class InitPropertiesFile {
 		}catch(FileNotFoundException e) {
 			// 読み込めなかった場合の処理
 			this.properties.setProperty("Read", "none");
+			this.properties.setProperty("first", "true");
 			try {
 				this.properties.store(new FileOutputStream(this.fileName), "Yomiage Properties");
 			} catch (FileNotFoundException e1) {
@@ -32,8 +33,9 @@ public class InitPropertiesFile {
 		}
 	}
 	
-	public void Change(String value) {
+	public void Change(String value) throws FileNotFoundException, IOException {
 		this.properties.setProperty("Read", value);
+		this.properties.store(new FileOutputStream(this.fileName), "Yomiage Propeties");
 	}
 
 	// getter and setter

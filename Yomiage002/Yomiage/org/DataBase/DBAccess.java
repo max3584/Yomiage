@@ -1,11 +1,14 @@
 package org.DataBase;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import org.sqlite.JDBC;
+
+import org.CLI.CEExpress;
+import org.sqlite.*;
 
 public class DBAccess implements DataBaseAccess {
 
@@ -18,7 +21,7 @@ public class DBAccess implements DataBaseAccess {
 
 	private final boolean debugflg = true;
 
-	private final Class<?> sqlite = JDBC.class;
+	private Class<?> sqlite;
 
 	/**
 	 * 
@@ -28,12 +31,12 @@ public class DBAccess implements DataBaseAccess {
 	 * @param url       jdbc:[DataBaseName].URL の書式で書くと処理できます
 	 */
 
-	public DBAccess(String url) {
+	public DBAccess(String url) throws IOException, InterruptedException {
 
 		String comment = "disttributions....";
 
 		try {
-			Class.forName("org.sqlite.JDBC");
+			this.sqlite = Class.forName("org.sqlite.JDBC");
 
 			// クラスの存在確認
 			this.setDatabase(this.sqlite);
@@ -48,7 +51,10 @@ public class DBAccess implements DataBaseAccess {
 			comment = "not connection";
 		} catch (ClassNotFoundException e) {
 			comment = "Not Classes!!!!!!";
-			e.printStackTrace();
+			System.out.println("クラスが存在しないようです。URLを出すのでこれをブラウザにコピーしてそのサイトからダウンロードしてください");
+			System.out.println("その後、javaのランタイムが入っている C:\\Program Files\\Java\\jdk<JDK_version>\\jre\\lib\\ext に入れてください");
+			new CEExpress("cmd", "/c", "start","https://bitbucket.org/xerial/sqlite-jdbc/downloads/sqlite-jdbc-3.27.2.1.jar").ConsoleCommand();;
+			throw new Error("このソフトウェアで扱うクラスがないため、一度終了処理を行います。");
 		} finally {
 			// log
 			if (this.debugflg) {

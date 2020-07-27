@@ -1,8 +1,8 @@
 package org.CLI.MenuData;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 
 import org.CLI.ConsoleMenus;
@@ -70,6 +70,9 @@ public class MenuData implements ConsoleMenus {
 					} catch (IndexOutOfBoundsException e) {
 						e.printStackTrace();
 					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO 自動生成された catch ブロック
 						e.printStackTrace();
 					}
 				} else {

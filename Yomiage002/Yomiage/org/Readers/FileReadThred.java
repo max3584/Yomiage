@@ -33,7 +33,7 @@ public class FileReadThred implements Runnable {
 		// datalist init(一時保存用)
 		ArrayList<DataLists> dl = new ArrayList<DataLists>();
 		try {
-			FileRead fr = new FileRead(this.dir, StandardCharsets.UTF_8);
+			FileRead fr = new FileRead(this.dir, StandardCharsets.UTF_16LE);
 			TabDatas td = new TabDatas();
 			// 読み取り機構
 			for (String msg : fr.Reads()) {

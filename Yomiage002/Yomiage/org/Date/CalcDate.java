@@ -47,44 +47,46 @@ public class CalcDate {
 	
 	
 	// day Calcs
-	public int  prevDay(int num) {
+	public void  prevDay(int num) {
 		this.day -= num;
-		return this.day >= 0 ? this.day : this.CalcDay(this.prevMonth(1) + 1) - this.day;
-	}
-	
-	public int nextDay(int num) {
-		this.day += num;
-		return this.day <= this.CalcDay(this.month+1)? this.day : this.day % this.CalcDay(this.nextMonth(1) + 1);
-	}
-	
-	// month calcs
-	public int prevMonth(int num) {
-		this.month -= num;
-		if(this.month >= 0) {
-			return this.month;
-		} else {
-			this.prevYear(Math.abs(this.month));
-			return Math.abs(this.month) % 12;
+		if (this.day <= 0) {
+			this.prevMonth(1);
+			this.day -= this.CalcDay(this.month + 1);
 		}
 	}
 	
-	public int nextMonth(int num) {
+	public void nextDay(int num) {
+		this.day += num;
+		if (this.day > this.CalcDay(this.month+1)) {
+			this.nextMonth(1);
+			this.day %= this.CalcDay(this.month + 1);
+		}
+	}
+	
+	// month calcs
+	public void prevMonth(int num) {
+		this.month -= num;
+		if(this.month < 0) {
+			this.prevYear(Math.abs(this.month));
+			this.month = Math.abs(this.month) % 12;
+		}
+	}
+	
+	public void nextMonth(int num) {
 		this.month += num;
-		if (this.month < 12) {
-			return this.month;
-		} else {
+		if (this.month > 12) {
 			this.nextYear((int)(this.month / 12));
-			 return this.month % 12;
+			this.month %= 12;
 		}
 	}
 	
 	// year calcs
-	public int prevYear(int num) {
-		return this.year -= num;
+	public void prevYear(int num) {
+		this.year -= num;
 	}
 	
-	public int nextYear(int num) {
-		return this.year += num;
+	public void nextYear(int num) {
+		this.year += num;
 	}
 	
 	// print Method
@@ -99,7 +101,7 @@ public class CalcDate {
 	// print method2
 	public String getCalcData() {
 		Calendar newDate = Calendar.getInstance();
-		newDate.set(this.year, this.month, this.day, this.hour, this.min, this.sec);
+		newDate.set(this.year, this.month - 1, this.day);
 		return this.sdf.format(newDate.getTime());
 	}
 	

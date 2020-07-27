@@ -7,6 +7,14 @@ import org.CLI.CEExpress;
 import org.Request.InitPropertiesFile;
 import org.Request.UserRequest;
 
+/**
+ * ユーザの画面に表示するクラスで主に、ユーザに対して入力を施す様なものを取り扱っているクラス
+ * また、クラス自体にはほとんどコメントアウトが少ないため、実際に動かしているのを見ながらやる方がわかりやすいと思います。
+ * 
+ * @author max
+ *
+ */
+
 public class easySetup implements Runnable {
 
 	// プロファイル
@@ -50,17 +58,40 @@ public class easySetup implements Runnable {
 					this.dataInitialize[0][2], this.dataInitialize[0][3], this.dataInitialize[0][4],
 					this.dataInitialize[0][5]);
 			System.out.println(this.findText);
+			// user input
 			String use = this.ur.UserInputRequest(">");
-			int num = Arrays.asList(this.dataInitialize[0]).indexOf(use);
-			if (num > -1) {
-				this.ipf.Change(this.dataInitialize[1][num]);
-				this.properties = this.ipf.getProperties().getProperty("Read");
-			} else if ("exit".equals(use)) {
-				this.properties = "exit";
-			} else {
-				System.out.println("コマンドを間違えています。[Enter]を押すと流れます");
-				this.ur.UserInputRequest("");
+			// search data initialize
+			StringBuffer sb = new StringBuffer();
+			String[] searchView = use.split(",");
+			exit: for (int i = 0; i < searchView.length; i++) {
+				for (int j = 0; j < this.dataInitialize.length; j++) {
+					int index = Arrays.asList(this.dataInitialize[0]).indexOf(searchView[i]);
+					if (index != -1) {
+						sb.append(String.format("%s ", this.dataInitialize[1][index]));
+						break;
+					} else if ("exit".equals(searchView[i])) {
+						sb.delete(0, sb.length());
+						sb.append("exit");
+						break exit;
+					} else {
+						this.ur.UserInputRequest(String.format(
+								"useCommand:%s\nこの部分でコマンドを間違えています。[Enter]を押すと流れます",
+								searchView[i]));
+					}
+				}
 			}
+			this.properties = sb.substring(0);
+			this.ipf.getProperties().setProperty("Read", this.properties);
+			/*
+			 * int num = Arrays.asList(this.dataInitialize[0]).indexOf(use); if (sb.length()
+			 * > -1) { try { this.ipf.Change(this.dataInitialize[1][num]); } catch
+			 * (FileNotFoundException e) { e.printStackTrace(); } catch (IOException e) {
+			 * e.printStackTrace(); } this.properties =
+			 * this.ipf.getProperties().getProperty("Read"); } else if ("exit".equals(use))
+			 * { this.properties = "exit"; } else {
+			 * System.out.println("コマンドを間違えています。[Enter]を押すと流れます");
+			 * this.ur.UserInputRequest(""); }
+			 */
 
 		}
 

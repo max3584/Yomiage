@@ -138,7 +138,6 @@ public class DirectoryUseSearch implements Directory {
 
 		return this.dir.toString();
 	}
-	
 
 	@Override
 	public String[] Files() {
