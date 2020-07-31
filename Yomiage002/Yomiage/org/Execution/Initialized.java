@@ -79,7 +79,7 @@ public class Initialized {
 			do {
 
 				System.out.println("特定の年月日のみ取得する場合設定してください<半角文字>(Default:1ヵ月)");
-				System.out.println("例:\n>202007");
+				System.out.printf("例:\n>%s\n", this.date.getCalcData());
 				System.out.println("特に何もない場合は[Enter]を押してください" + text);
 				try {
 					String use_local = ur.UserInputRequest(">");
@@ -145,6 +145,7 @@ public class Initialized {
 			this.ipf.getProperties().store(new FileOutputStream(this.ipf.getFileName()), "Yomiage Properties");
 		}
 		this.file = new File(".\\ExtendFiles\\");
+		this.db.close();
 	}
 
 	// class method...

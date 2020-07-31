@@ -24,10 +24,9 @@ public class TodayReadExecution {
 		if (args.length < 1) {
 			throw new IndexOutOfBoundsException("引数が存在しないため");
 		}
-		
+
 		/**
-		 * Initialized Setups
-		 * この設定はいらない可能性がある？
+		 * Initialized Setups この設定はいらない可能性がある？
 		 */
 		Initialized init = new Initialized(args[0]);
 
@@ -48,25 +47,21 @@ public class TodayReadExecution {
 		DirectoryUseSearch dus = new DirectoryUseSearch();
 		// satart up datas
 		try {
-			//date setup
+			// date setup
 			String date;
-			if(cd.getHour() < 7 | cd.getHour() > 23) {
+			if (cd.getHour() < 7 | cd.getHour() > 23) {
 				cd.prevDay(1);
 			}
 			date = cd.getCalcData();
 			// directoryを入れる
-			//dir = dus.search(String.format("%s\\ChatLog%s_00.txt", psoLogFileDir, date));
-			if (cd.getHour() > 6 & cd.getHour() < 24) {
+			// dir = dus.search(String.format("%s\\ChatLog%s_00.txt", psoLogFileDir, date));
+			try {
 				dir = dus.search(String.format("%s\\ChatLog%s_00.txt", psoLogFileDir, date));
-			} else {
-				cd.prevDay(1);
-				try {
-					dir = dus.search(String.format("%s\\ChatLog%s_00.txt", psoLogFileDir, cd.getCalcData()));
-				} catch (FileNotFoundException e) {
-					dir = dus.search(String.format("%s\\ChatLog%s_00.txt", psoLogFileDir, date));
-				}
+			} catch (FileNotFoundException e) {
+				dir = dus.search(String.format("%s\\ChatLog%s_00.txt", psoLogFileDir, date));
 			}
-			
+
+			System.out.printf("\n\nPath: %s\n\n", dir);
 
 		} catch (FileNotFoundException e) {
 			// e.printStackTrace();
@@ -100,17 +95,19 @@ public class TodayReadExecution {
 			// Easy AI
 			EasyAI ai = new EasyAI("JDBC:sqlite:.\\ExtendFiles\\controlData.db");
 			/**
-			 * AI実装部
-			 * データ定義
+			 * AI実装部 データ定義
 			 */
 			ArrayList<String> Reference = new ArrayList<String>();
 			ArrayList<String> EReference = new ArrayList<String>();
-			
-			for(int i = 0; i < ai.getReferenceData().size(); i++) {
-				Reference.add(String.format("%s,%s",ai.getReferenceData().get(i).getUsername(), ai.getReferenceData().get(i).getComment()));
-				EReference.add(String.format("%s,%s", ai.getERData().get(i).getUsername(), ai.getERData().get(i).getComment()));
+
+			for (int i = 0; i < ai.getReferenceData().size(); i++) {
+				Reference.add(String.format("%s,%s", ai.getReferenceData().get(i).getUsername(),
+						ai.getReferenceData().get(i).getComment()));
 			}
-			
+			for (int i = 0; i < ai.getERData().size(); i++) {
+				EReference.add(String.format("%s,%s", ai.getERData().get(i).getUsername(),
+						ai.getERData().get(i).getComment()));
+			}
 			do {
 				fr = new FileRead(dir, StandardCharsets.UTF_16LE);
 				// 一時保存領域
@@ -123,28 +120,40 @@ public class TodayReadExecution {
 				// 読み上げする前の前処理
 				if (dl instanceof DataLists) {
 					if (!natuData.getNo().equals(dl.getNo())) {
-						
-						//読上げ判定式用
+
+						// 読上げ判定式用
 						boolean request = false;
-						//判定処理
-						for(int i = 0; i < properties.length; i++) {
-							if(request) {
+						// 判定処理
+						for (int i = 0; i < properties.length; i++) {
+							if (request) {
 								break;
 							}
-							request = properties[i].indexOf(natuData.getGroup()) > -1; 
+							request = properties[i].indexOf(natuData.getGroup()) > -1;
 						}
+						// Database統計
+						ai.DatabaseUpdate(tmp);
+						
 						// 棒読みに送るための処理を記述
 						if (properties[0].equals("any") | request) {
-							//読上げ例外処理
-							if(Reference.indexOf(natuData.getComment()) == -1 & EReference.indexOf(natuData.getComment()) != -1) {
+							// System.out.println("1対象");
+							// 読上げ例外処理
+							if (Reference.indexOf(natuData.getComment()) == -1
+									| EReference.indexOf(natuData.getComment()) != -1) {
 								// console execute
 								// to C Packet Request Execute
-								cee.ConsoleCommand(String.format("%s:%s", natuData.getUser(), natuData.getComment()));
+								cee.ConsoleCommand(String.format("%s:%s", natuData.getUser(),
+										natuData.getComment()));
 							}
 						}
 					}
 				}
-				
+
+				// debugs
+				// System.out.println(String.format("reference : %s EReference : %s",
+				// Reference.indexOf(natuData.getComment()) == -1,
+				// EReference.indexOf(natuData.getComment()) != -1));
+				// System.out.println(properties[0]);
+
 				// user input key type execution
 				if (setup.getExcution()) {
 					// profile education
@@ -162,13 +171,20 @@ public class TodayReadExecution {
 
 				// dlが過去データとなるようにすること
 				dl = natuData;
-				
-				//database update
-				if(minutes + 15 % 60 >= cd.getMin()) {
+
+				// database 処理・・・ｗ
+				// database update
+				/*　旧
+				if (minutes + 15 % 60 <= cd.getMin()) {
 					minutes = cd.getMin();
-					// database update
-					init.UpdateDatabase(tmp);
+					// System.out.println("2対象"); // database update
+					ai.DatabaseUpdate(tmp);
+					if (cd.getHour() < 7 | cd.getHour() > 23) {
+						cd.prevDay(1);
+					}
 				}
+				cd.update();
+				*/
 				// sleep time
 				Thread.sleep(200);
 			} while (flg);

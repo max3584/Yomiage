@@ -111,6 +111,10 @@ public class CalcDate {
 		
 		return new SimpleDateFormat(format).format(newDate.getTime());
 	}
+	
+	public void update() {
+		this.date = new Date();
+	}
 
 	//gettear and setter
 	public Date getDate() {
