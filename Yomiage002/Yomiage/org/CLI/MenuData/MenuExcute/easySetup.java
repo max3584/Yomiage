@@ -67,7 +67,7 @@ public class easySetup implements Runnable {
 				for (int j = 0; j < this.dataInitialize.length; j++) {
 					int index = Arrays.asList(this.dataInitialize[0]).indexOf(searchView[i]);
 					if (index != -1) {
-						sb.append(String.format("%s ", this.dataInitialize[1][index]));
+						sb.append(String.format("%s", this.dataInitialize[1][index]));
 						break;
 					} else if ("exit".equals(searchView[i])) {
 						sb.delete(0, sb.length());

@@ -31,7 +31,7 @@ public class EasyAI {
 		this.db = new DBAccess(this.DatabaseName);
 		this.referenceData = new ArrayList<ReferenceData>();
 		this.ERData = new ArrayList<ExceptionReferenceData>();
-		this.setSqlFormat( (String[])Arrays.asList("select * from referenceData" , "select * from exceptionreferenceData").toArray() );
+		this.setSqlFormat( (String[])Arrays.asList("select * from referenceDataView" , "select * from exceptionreferenceData").toArray() );
 		this.result = this.db.SearchSQLExecute(this.sqlFormat[0]);
 		while(this.result.next()) {
 			this.referenceData.add(new ReferenceData(this.result.getString("username"), this.result.getString("comments"), this.result.getFloat("percent")));

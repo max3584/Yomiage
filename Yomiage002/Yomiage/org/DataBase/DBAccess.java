@@ -19,7 +19,7 @@ public class DBAccess implements DataBaseAccess {
 
 	// debug init
 
-	private final boolean debugflg = true;
+	private final boolean debugflg = false;
 
 	private Class<?> sqlite;
 

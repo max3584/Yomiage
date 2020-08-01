@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -82,6 +83,8 @@ public class TodayReadExecution {
 		try {
 			// inits
 			boolean flg = true;
+			//読み上げない文字列を消すための領域
+			String regex = "/[a-zA-Z]* | {[a-zA-Z]*}";
 			// 読み取りに必要なクラス
 			FileRead fr = new FileRead(dir, StandardCharsets.UTF_16LE);
 			// 一時保存用の領域
@@ -123,26 +126,26 @@ public class TodayReadExecution {
 
 						// 読上げ判定式用
 						boolean request = false;
-						// 判定処理
-						for (int i = 0; i < properties.length; i++) {
-							if (request) {
-								break;
-							}
-							request = properties[i].indexOf(natuData.getGroup()) > -1;
-						}
+						request = Arrays.asList(properties).indexOf(natuData.getGroup()) > -1;
+						
 						// Database統計
 						ai.DatabaseUpdate(tmp);
 						
+						//debug
+						/*
+						System.out.println(String.format("boolean1: %d boolean2: %s\n andbool: %s\n properties: %s, request: %s",
+								Arrays.asList(properties).indexOf("any") , request, Arrays.asList(setup.getProperties()).indexOf("any") > -1 | request, setup.getProperties(), request));
+						*/
 						// 棒読みに送るための処理を記述
 						if (properties[0].equals("any") | request) {
 							// System.out.println("1対象");
 							// 読上げ例外処理
 							if (Reference.indexOf(natuData.getComment()) == -1
 									| EReference.indexOf(natuData.getComment()) != -1) {
+								
 								// console execute
 								// to C Packet Request Execute
-								cee.ConsoleCommand(String.format("%s:%s", natuData.getUser(),
-										natuData.getComment()));
+								cee.ConsoleCommand(String.format("%s:%s", natuData.getUser(), natuData.getComment().replaceAll(regex, "")));
 							}
 						}
 					}
@@ -174,17 +177,11 @@ public class TodayReadExecution {
 
 				// database 処理・・・ｗ
 				// database update
-				/*　旧
-				if (minutes + 15 % 60 <= cd.getMin()) {
-					minutes = cd.getMin();
-					// System.out.println("2対象"); // database update
-					ai.DatabaseUpdate(tmp);
-					if (cd.getHour() < 7 | cd.getHour() > 23) {
-						cd.prevDay(1);
-					}
-				}
-				cd.update();
-				*/
+				/*
+				 * 旧 if (minutes + 15 % 60 <= cd.getMin()) { minutes = cd.getMin(); //
+				 * System.out.println("2対象"); // database update ai.DatabaseUpdate(tmp); if
+				 * (cd.getHour() < 7 | cd.getHour() > 23) { cd.prevDay(1); } } cd.update();
+				 */
 				// sleep time
 				Thread.sleep(200);
 			} while (flg);

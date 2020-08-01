@@ -1,7 +1,5 @@
 package org.Request;
 
-import java.util.ArrayList;
-
 public class DatabaseInsert {
 
 	/**

@@ -56,6 +56,15 @@ public class Initialized {
 			File DatabaseFile = new File(".\\ExtendFiles\\controlData.db");
 			if (DatabaseFile.createNewFile()) {
 				System.out.println("DataBase File Create Complete!");
+				DefaultSQL defaultsql = new DefaultSQL();
+				this.db = new DBAccess("JDBC:sqlite:" + DatabaseFile.toString());
+				try {
+					InitializedDatabaseCreate idc = new InitializedDatabaseCreate(this.file);
+					this.db.UpdateSQLExecute(idc.getSb().substring(0));
+				} catch (IOException e) {
+					this.db.UpdateSQLExecute(defaultsql.getSql());
+				}
+				this.db.close();
 			}
 			this.db = new DBAccess("JDBC:sqlite:" + DatabaseFile.toString());
 
@@ -99,14 +108,15 @@ public class Initialized {
 			ArrayList<String> fileList = new ArrayList<String>();
 
 			for (int i = 0; i < fileName.length; i++) {
-				if (fileName[i].indexOf(
-						String.format("ChatLog%s", date_flg ? String.valueOf(use) : flg? "" : date.getData())) == 0) {
+				if (fileName[i].indexOf(String.format("ChatLog%s",
+						date_flg ? String.valueOf(use) : flg ? "" : date.getData())) == 0) {
 					fileList.add(fileName[i]);
 				}
 			}
 
 			// 並列処理実行用
-			ExecutorService es = Executors.newFixedThreadPool((int) (fileList.size() / 2));
+			ExecutorService es = Executors
+					.newFixedThreadPool((int) (fileList.size() > 0 ? fileList.size() : 1 / 2));
 			// SQL文作成までを実行するためのクラス
 			ArrayList<FileReadThred> frt = new ArrayList<FileReadThred>();
 
@@ -152,7 +162,8 @@ public class Initialized {
 	public void UpdateDatabase(ArrayList<DataLists> list) {
 		DatabaseInsert di = new DatabaseInsert();
 		for (int i = 0; i < list.size(); i++) {
-			String[] values = {list.get(i).getDate(), list.get(i).getNo(), list.get(i).getGroup(), list.get(i).getSirial(), list.get(i).getUser(), list.get(i).getComment()};
+			String[] values = { list.get(i).getDate(), list.get(i).getNo(), list.get(i).getGroup(),
+					list.get(i).getSirial(), list.get(i).getUser(), list.get(i).getComment() };
 			String sql = di.CreateInsertSQLFormat(values);
 
 			this.db.UpdateSQLExecute(sql);
