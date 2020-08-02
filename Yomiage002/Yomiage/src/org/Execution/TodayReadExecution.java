@@ -121,20 +121,28 @@ public class TodayReadExecution {
 			//int minutes = cd.getMin();
 			// Easy AI
 			EasyAI ai = new EasyAI("JDBC:sqlite:.\\ExtendFiles\\controlData.db");
-
+			
+			// 並列処理実行用2
+			ExecutorService thread_loop = Executors.newFixedThreadPool((int)Math.sqrt(ai.getReferenceData().size()));
+			
 			/**
 			 * AI実装部 データ定義
 			 */
 			ArrayList<String> Reference = new ArrayList<String>();
 			ArrayList<String> EReference = new ArrayList<String>();
-
+			
 			for (int i = 0; i < ai.getReferenceData().size(); i++) {
-				Reference.add(String.format("%s,%s", ai.getReferenceData().get(i).getUsername(),
-						ai.getReferenceData().get(i).getComment()));
+				int num = i;
+				thread_loop.execute(() -> {
+					Reference.add(String.format("%s,%s", ai.getReferenceData().get(num).getUsername(),ai.getReferenceData().get(num).getComment()));
+				});
 			}
+			
 			for (int i = 0; i < ai.getERData().size(); i++) {
-				EReference.add(String.format("%s,%s", ai.getERData().get(i).getUsername(),
-						ai.getERData().get(i).getComment()));
+				int num = i;
+				thread_loop.execute(() -> {
+					EReference.add(String.format("%s,%s", ai.getERData().get(num).getUsername(), ai.getERData().get(num).getComment()));
+				});
 			}
 			do {
 				fr = new FileRead(dir, StandardCharsets.UTF_16LE);
@@ -156,23 +164,24 @@ public class TodayReadExecution {
 						// Database統計
 						ai.DatabaseUpdate(tmp);
 
-						// debug
-						/*
-						 * System.out.println(String.
-						 * format("boolean1: %d boolean2: %s\n andbool: %s\n properties: %s, request: %s"
-						 * , Arrays.asList(properties).indexOf("any") , request,
-						 * Arrays.asList(setup.getProperties()).indexOf("any") > -1 | request,
-						 * setup.getProperties(), request));
-						 */
+						// スレッド処理終了
+						thread_loop.shutdown();
+						//再度、入れる
+						thread_loop = Executors.newFixedThreadPool((int)Math.sqrt(ai.getReferenceData().size()));
+						
 						// 統計データ更新
 						for (int i = 0; i < ai.getReferenceData().size(); i++) {
-							Reference.add(String.format("%s",
-									ai.getReferenceData().get(i).getComment()));
+							int num = i;
+							thread_loop.execute(() -> {
+								Reference.add(String.format("%s,%s", ai.getReferenceData().get(num).getUsername(),ai.getReferenceData().get(num).getComment()));
+							});
 						}
-
+						
 						for (int i = 0; i < ai.getERData().size(); i++) {
-							EReference.add(
-									String.format("%s", ai.getERData().get(i).getComment()));
+							int num = i;
+							thread_loop.execute(() -> {
+								EReference.add(String.format("%s,%s", ai.getERData().get(num).getUsername(), ai.getERData().get(num).getComment()));
+							});
 						}
 
 						// 棒読みに送るための処理を記述
@@ -223,7 +232,6 @@ public class TodayReadExecution {
 
 				// dlが過去データとなるようにすること
 				dl = natuData;
-
 				// database 処理・・・ｗ
 				// database update
 				/*

@@ -3,8 +3,27 @@ package org.Execution;
 public class DefaultSQL {
 
 	private String sql;
+	private String prevDelete;
+	private String updateTables;
 	
 	public DefaultSQL() {
+		this.prevDelete = "drop view referenceDataView;";
+		this.updateTables = "create view referenceDataView (username, comments, percent) as\r\n" + 
+				"select * \r\n" + 
+				"	from\r\n" + 
+				"		(\r\n" + 
+				"			select a.username, a.comments, round(cast(a.counter as real) / sum(b.counter),4) as persent\r\n" + 
+				"				from \r\n" + 
+				"					countdata a,\r\n" + 
+				"					countdata b\r\n" + 
+				"				where\r\n" + 
+				"					a.username = b.username\r\n" + 
+				"				group by\r\n" + 
+				"					a.username, a.comments\r\n" + 
+				"		)\r\n" + 
+				"	where\r\n" + 
+				"		persent > 0.01 and\r\n" + 
+				"		persent < 1;";
 		this.sql = "\r\n" + 
 				"/* データベースのテーブル作成用のデータ */\r\n" + 
 				"\r\n" + 
@@ -52,30 +71,51 @@ public class DefaultSQL {
 				"	統計データからのもので、そんな複雑な式は書いていない\r\n" + 
 				"*/\r\n" + 
 				"\r\n" + 
-				"create view referenceDataView (username, comments, percent) as \r\n" + 
-				"	select b.username, b.comments, round(cast(b.counter as real) / cast(a.use_comments as real), 2) as num\r\n" + 
-				"		from \r\n" + 
-				"			countData b,\r\n" + 
-				"			(\r\n" + 
-				"				select count(comments) as use_comments, username\r\n" + 
-				"					from Natu_data\r\n" + 
-				"						group by username\r\n" + 
-				"			) a\r\n" + 
-				"		where \r\n" + 
-				"			a.username = b.username\r\n" + 
-				"		group by\r\n" + 
-				"			b.username, b.comments\r\n" + 
-				"		having \r\n" + 
-				"			num < 1 and\r\n" + 
-				"			num > 0.25;";
+				"create view referenceDataView (username, comments, percent) as\r\n" + 
+				"select * \r\n" + 
+				"	from\r\n" + 
+				"		(\r\n" + 
+				"			select a.username, a.comments, round(cast(a.counter as real) / sum(b.counter),4) as persent\r\n" + 
+				"				from \r\n" + 
+				"					countdata a,\r\n" + 
+				"					countdata b\r\n" + 
+				"				where\r\n" + 
+				"					a.username = b.username\r\n" + 
+				"				group by\r\n" + 
+				"					a.username, a.comments\r\n" + 
+				"		)\r\n" + 
+				"	where\r\n" + 
+				"		persent > 0.01 and\r\n" + 
+				"		persent < 1;";
 	}
 
 	
+	// getter and setter
 	public String getSql() {
 		return sql;
 	}
 
 	public void setSql(String sql) {
 		this.sql = sql;
+	}
+
+
+	public String getPrevDelete() {
+		return prevDelete;
+	}
+
+
+	public void setPrevDelete(String prevDelete) {
+		this.prevDelete = prevDelete;
+	}
+
+
+	public String getUpdateTables() {
+		return updateTables;
+	}
+
+
+	public void setUpdateTables(String updateTables) {
+		this.updateTables = updateTables;
 	}
 }
