@@ -58,12 +58,19 @@ public class Initialized {
 				System.out.println("DataBase File Create Complete!");
 				DefaultSQL defaultsql = new DefaultSQL();
 				this.db = new DBAccess("JDBC:sqlite:" + DatabaseFile.toString());
+				
+				String[] sql = defaultsql.getSql().replaceAll("\r\n", "").split(";");
+				for (int i = 0; i < sql.length; i++) {
+					this.db.UpdateSQLExecute(sql[i] + ";");
+				}
+				/*
 				try {
 					InitializedDatabaseCreate idc = new InitializedDatabaseCreate(this.file);
 					this.db.UpdateSQLExecute(idc.getSb().substring(0));
 				} catch (IOException e) {
 					this.db.UpdateSQLExecute(defaultsql.getSql());
 				}
+				*/
 				this.db.close();
 			}
 			this.db = new DBAccess("JDBC:sqlite:" + DatabaseFile.toString());

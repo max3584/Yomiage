@@ -52,13 +52,19 @@ public class DBAccess implements DataBaseAccess {
 		} catch (ClassNotFoundException e) {
 			comment = "Not Classes!!!!!!";
 			System.out.println("クラスが存在しないようです。URLを出すのでこれをブラウザにコピーしてそのサイトからダウンロードしてください");
-			System.out.println("その後、javaのランタイムが入っている C:\\Program Files\\Java\\jdk<JDK_version>\\jre\\lib\\ext に入れてください");
+			System.out.println("その後、javaのランタイムが入っている C:\\Program Files\\Java\\jre<JRE_version>\\jre\\lib\\ext に入れてください");
 			new CEExpress("cmd", "/c", "start","https://bitbucket.org/xerial/sqlite-jdbc/downloads/sqlite-jdbc-3.27.2.1.jar").ConsoleCommand();;
+			System.out.println("終了次第、キーを押してください");
+			new CEExpress("cmd", "/c", "pause", ">", "Nul").ConsoleCommand();
+			System.out.println("デフォルトの場所を開きます((ダウンロードフォルダーが別の場合は自分でやってください))");
+			new CEExpress("cmd", "/c", "explorer", "%userprofile%\\downloads\\").ConsoleCommand();;
+			new CEExpress("cmd", "/c", "explorer", "C:\\Program Files\\Java\\").ConsoleCommand();;
+			new CEExpress("cmd", "/c", "pause");
 			throw new Error("このソフトウェアで扱うクラスがないため、一度終了処理を行います。");
 		} finally {
 			// log
 			if (this.debugflg) {
-				System.out.println(comment);
+				System.out.println("\n" + comment);
 			}
 		}
 	}

@@ -13,51 +13,79 @@ import org.Datas.ReferenceData;
 import org.Request.DatabaseInsert;
 
 public class EasyAI {
-	
+
 	// database
 	private DBAccess db;
 	private ResultSet result;
 	private String DatabaseName;
-	
+
 	// reference data inits
 	private ArrayList<ReferenceData> referenceData;
 	private ArrayList<ExceptionReferenceData> ERData;
-	
-	// sql format (default) 
+
+	// sql format (default)
 	private String[] sqlFormat;
-	
+
 	public EasyAI(String DatabaseName) throws SQLException, IOException, InterruptedException {
+		// database init
 		this.DatabaseName = DatabaseName;
 		this.db = new DBAccess(this.DatabaseName);
+		// reference datas
 		this.referenceData = new ArrayList<ReferenceData>();
 		this.ERData = new ArrayList<ExceptionReferenceData>();
-		this.setSqlFormat( (String[])Arrays.asList("select * from referenceDataView" , "select * from exceptionreferenceData").toArray() );
+		// sql formats
+		this.setSqlFormat((String[]) Arrays
+				.asList("select * from referenceDataView", "select * from exceptionreferenceData")
+				.toArray());
+		// reference data insert
 		this.result = this.db.SearchSQLExecute(this.sqlFormat[0]);
-		while(this.result.next()) {
-			this.referenceData.add(new ReferenceData(this.result.getString("username"), this.result.getString("comments"), this.result.getFloat("percent")));
+		while (this.result.next()) {
+			this.referenceData.add(new ReferenceData(this.result.getString("username"),
+					this.result.getString("comments"), this.result.getFloat("percent")));
 		}
+		// ErrorReference Data insert
 		this.result = this.db.SearchSQLExecute(this.sqlFormat[1]);
-		while(this.result.next()) {
-			this.ERData.add(new ExceptionReferenceData(this.result.getString("username"), this.result.getString("comments"), this.result.getFloat("percent"), this.result.getBoolean("flg")));
+		while (this.result.next()) {
+			this.ERData.add(new ExceptionReferenceData(this.result.getString("username"),
+					this.result.getString("comments"), this.result.getFloat("percent"),
+					this.result.getBoolean("flg")));
 		}
 		this.db.close();
 	}
-	
-	public void DatabaseUpdate(ArrayList<DataLists> list) throws IOException, InterruptedException {
+
+	public void DatabaseUpdate(ArrayList<DataLists> list) throws IOException, InterruptedException, SQLException {
 		this.db = new DBAccess(this.DatabaseName);
 		DatabaseInsert di = new DatabaseInsert();
 		for (int i = 0; i < list.size(); i++) {
-			String[] values = {list.get(i).getDate(), list.get(i).getNo(), list.get(i).getGroup(), list.get(i).getSirial(), list.get(i).getUser(), list.get(i).getComment()};
+			String[] values = { list.get(i).getDate(), list.get(i).getNo(), list.get(i).getGroup(),
+					list.get(i).getSirial(), list.get(i).getUser(), list.get(i).getComment() };
 			String sql = di.CreateInsertSQLFormat(values);
 
 			this.db.UpdateSQLExecute(sql);
 		}
+		
+		this.referenceData.clear();
+		this.ERData.clear();
+		
+		// reference data insert
+		this.result = this.db.SearchSQLExecute(this.sqlFormat[0]);
+		while (this.result.next()) {
+			this.referenceData.add(new ReferenceData(this.result.getString("username"),
+					this.result.getString("comments"), this.result.getFloat("percent")));
+		}
+		// ErrorReference Data insert
+		this.result = this.db.SearchSQLExecute(this.sqlFormat[1]);
+		while (this.result.next()) {
+			this.ERData.add(new ExceptionReferenceData(this.result.getString("username"),
+					this.result.getString("comments"), this.result.getFloat("percent"),
+					this.result.getBoolean("flg")));
+		}
 	}
-	
+
 	public void DatabaseClose() {
 		this.db.close();
 	}
-	
+
 	// getter and setter
 	public DBAccess getDb() {
 		return db;
@@ -98,6 +126,5 @@ public class EasyAI {
 	public void setERData(ArrayList<ExceptionReferenceData> eRData) {
 		ERData = eRData;
 	}
-	
-	
+
 }

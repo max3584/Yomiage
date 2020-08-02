@@ -84,7 +84,10 @@ public class TodayReadExecution {
 			// inits
 			boolean flg = true;
 			//読み上げない文字列を消すための領域
-			String regex = "/[a-zA-Z]* | {[a-zA-Z]*}";
+			//String regex = "/[a-zA-Z]*";
+			String regex = "^\\\";(^|\\s)/ci\\d+?((\\s(\\d+|nw|t\\d|s\\d+)){1,4});(^|\\s)/(f|m|c)?la\\s([_a-zA-Z0-9'-]+)(\\ss\\d)?;(^|\\s)/((ca?o?(s|mo?u?f(lage)?)\\w*)\\s([*＊・\\w]+)){1,2}\\s*;/\\w+\\s*(on|off)\\s*\\d*\\s*;(^|\\s)/\\w*;^\\s";
+			String regex2 = "\\{[a-zA-Z+-]*\\}";
+			String regex3 = "[\\\\\\{\\}\\|\\[\\]'\\(\\)<>#\\%*\\+\\-\\?_？ωー＿／＼]+";
 			// 読み取りに必要なクラス
 			FileRead fr = new FileRead(dir, StandardCharsets.UTF_16LE);
 			// 一時保存用の領域
@@ -97,6 +100,7 @@ public class TodayReadExecution {
 			int minutes = cd.getMin();
 			// Easy AI
 			EasyAI ai = new EasyAI("JDBC:sqlite:.\\ExtendFiles\\controlData.db");
+			
 			/**
 			 * AI実装部 データ定義
 			 */
@@ -136,6 +140,15 @@ public class TodayReadExecution {
 						System.out.println(String.format("boolean1: %d boolean2: %s\n andbool: %s\n properties: %s, request: %s",
 								Arrays.asList(properties).indexOf("any") , request, Arrays.asList(setup.getProperties()).indexOf("any") > -1 | request, setup.getProperties(), request));
 						*/
+						// 統計データ更新
+						for (int i = 0; i < ai.getReferenceData().size(); i++) {
+							Reference.add(String.format("%s", ai.getReferenceData().get(i).getComment()));
+						}
+						
+						for (int i = 0; i < ai.getERData().size(); i++) {
+							EReference.add(String.format("%s", ai.getERData().get(i).getComment()));
+						}
+						
 						// 棒読みに送るための処理を記述
 						if (properties[0].equals("any") | request) {
 							// System.out.println("1対象");
@@ -145,7 +158,7 @@ public class TodayReadExecution {
 								
 								// console execute
 								// to C Packet Request Execute
-								cee.ConsoleCommand(String.format("%s:%s", natuData.getUser(), natuData.getComment().replaceAll(regex, "")));
+								cee.ConsoleCommand(String.format("%s:%s", natuData.getUser(), natuData.getComment().replaceAll(regex, "").replaceAll(regex2, "").replaceAll(regex3, "")));
 							}
 						}
 					}
