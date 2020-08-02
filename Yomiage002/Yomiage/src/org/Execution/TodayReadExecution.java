@@ -80,14 +80,35 @@ public class TodayReadExecution {
 		// 並列処理実行用
 		ExecutorService es = Executors.newFixedThreadPool(1);
 
+		/**
+		 * /p /cmf ＊神刀スサノオ /mpal1 /spal18 /sr Ｒ／Ｃストライク Ｃスト(迷彩変更)
+		 */
+
 		try {
 			// inits
 			boolean flg = true;
-			//読み上げない文字列を消すための領域
-			//String regex = "/[a-zA-Z]*";
-			String regex = "^\\\";(^|\\s)/ci\\d+?((\\s(\\d+|nw|t\\d|s\\d+)){1,4});(^|\\s)/(f|m|c)?la\\s([_a-zA-Z0-9'-]+)(\\ss\\d)?;(^|\\s)/((ca?o?(s|mo?u?f(lage)?)\\w*)\\s([*＊・\\w]+)){1,2}\\s*;/\\w+\\s*(on|off)\\s*\\d*\\s*;(^|\\s)/\\w*;^\\s";
+			// 読み上げない文字列を消すための領域
+
+			String regex1 = "(^|\\s)?/\\w*";
+			// カラー変更削除
 			String regex2 = "\\{[a-zA-Z+-]*\\}";
+			// 伏字
 			String regex3 = "[\\\\\\{\\}\\|\\[\\]'\\(\\)<>#\\%*\\+\\-\\?_？ωー＿／＼]+";
+			// cmf
+			String regex4 = "(^|\\s)/cmf(\\s|\\b)?\\w*";
+			// la
+			String regex5 = "(^|\\s)/(f|m|c)?la\\s\\w*(\\ss\\d)?";
+			// ci
+			String regex6 = "(^|\\s)/ci\\d+?((\\s(\\d+|nw|t\\d|s\\d+)){1,4})";
+			// ca
+			String regex7 = "(^|\\s)/((ca?o?(s|mo?u?f(lage)?)\\w*)\\s([*＊・\\w]+)){1,2}\\s*";
+			// on offの変更の削除
+			String regex8 = "/\\w+\\s*(on|off)\\s*\\d*\\s*;(^|\\s)/\\w*";
+			String regex9 = "^\\s";
+			// String regex =
+			// "^/[a-zA-Z]*;(^|\\s)/(m|s)pal?\\d;(^|\\s)/ci\\d+?((\\s(\\d+|nw|t\\d|s\\d+)){1,4});(^|\\s)/cmf?\\b\\w?;(^|\\s)/(f|m|c)?la\\s([_a-zA-Z0-9'-]+)(\\ss\\d)?;(^|\\s)/((ca?o?(s|mo?u?f(lage)?)\\w*)\\s([*＊・\\w]+)){1,2}\\s*;/\\w+\\s*(on|off)\\s*\\d*\\s*;(^|\\s)/\\w*;^\\s";
+			// ^\";(^|\s)/ci\d+?((\s(\d+|nw|t\d|s\d+)){1,4});(^|\s)/cmf?\\b\\w?;(^|\s)/(f|m|c)?la\s([_a-zA-Z0-9'-]+)(\ss\d)?;(^|\s)/((ca?o?(s|mo?u?f(lage)?)\w*)\s([*＊・\w]+)){1,2}\s*;/\w+\s*(on|off)\s*\d*\s*;(^|\s)/\w*;^\s
+
 			// 読み取りに必要なクラス
 			FileRead fr = new FileRead(dir, StandardCharsets.UTF_16LE);
 			// 一時保存用の領域
@@ -97,10 +118,10 @@ public class TodayReadExecution {
 			// プロパティの値
 			String[] properties;
 			// database update timer
-			int minutes = cd.getMin();
+			//int minutes = cd.getMin();
 			// Easy AI
 			EasyAI ai = new EasyAI("JDBC:sqlite:.\\ExtendFiles\\controlData.db");
-			
+
 			/**
 			 * AI実装部 データ定義
 			 */
@@ -131,34 +152,49 @@ public class TodayReadExecution {
 						// 読上げ判定式用
 						boolean request = false;
 						request = Arrays.asList(properties).indexOf(natuData.getGroup()) > -1;
-						
+
 						// Database統計
 						ai.DatabaseUpdate(tmp);
-						
-						//debug
+
+						// debug
 						/*
-						System.out.println(String.format("boolean1: %d boolean2: %s\n andbool: %s\n properties: %s, request: %s",
-								Arrays.asList(properties).indexOf("any") , request, Arrays.asList(setup.getProperties()).indexOf("any") > -1 | request, setup.getProperties(), request));
-						*/
+						 * System.out.println(String.
+						 * format("boolean1: %d boolean2: %s\n andbool: %s\n properties: %s, request: %s"
+						 * , Arrays.asList(properties).indexOf("any") , request,
+						 * Arrays.asList(setup.getProperties()).indexOf("any") > -1 | request,
+						 * setup.getProperties(), request));
+						 */
 						// 統計データ更新
 						for (int i = 0; i < ai.getReferenceData().size(); i++) {
-							Reference.add(String.format("%s", ai.getReferenceData().get(i).getComment()));
+							Reference.add(String.format("%s",
+									ai.getReferenceData().get(i).getComment()));
 						}
-						
+
 						for (int i = 0; i < ai.getERData().size(); i++) {
-							EReference.add(String.format("%s", ai.getERData().get(i).getComment()));
+							EReference.add(
+									String.format("%s", ai.getERData().get(i).getComment()));
 						}
-						
+
 						// 棒読みに送るための処理を記述
 						if (properties[0].equals("any") | request) {
 							// System.out.println("1対象");
 							// 読上げ例外処理
 							if (Reference.indexOf(natuData.getComment()) == -1
 									| EReference.indexOf(natuData.getComment()) != -1) {
-								
+
 								// console execute
 								// to C Packet Request Execute
-								cee.ConsoleCommand(String.format("%s:%s", natuData.getUser(), natuData.getComment().replaceAll(regex, "").replaceAll(regex2, "").replaceAll(regex3, "")));
+								cee.ConsoleCommand(String.format("%s:%s", natuData.getUser(),
+										natuData.getComment().replaceAll(regex4, "")
+												.replaceAll(regex2, "")
+												.replaceAll(regex3, "")
+												.replaceAll(regex4, "")
+												.replaceAll(regex5, "")
+												.replaceAll(regex6, "")
+												.replaceAll(regex7, "")
+												.replaceAll(regex8, "")
+												.replaceAll(regex9, "")
+												.replaceAll(regex1, "")));
 							}
 						}
 					}
