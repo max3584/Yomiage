@@ -60,8 +60,7 @@ public class EasyAI {
 		// reference data insert
 		this.result = this.db.SearchSQLExecute(this.sqlFormat[0]);
 		while (this.result.next()) {
-			this.referenceData.add(new ReferenceData(this.result.getString("username"),
-					this.result.getString("comments"), this.result.getFloat("percent")));
+			this.referenceData.add(new ReferenceData(this.result.getString("comments"), this.result.getString("totals"),this.result.getFloat("percent")));
 		}
 		// ErrorReference Data insert
 		this.result = this.db.SearchSQLExecute(this.sqlFormat[1]);

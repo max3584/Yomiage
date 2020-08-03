@@ -11,25 +11,49 @@ public class DefaultSQL {
 		 * ＳＱＬファイルを別途で用意しておくので中身を知りたい場合はそちらを参照してください
 		 * 
 		*/
-		this.prevDelete = "drop view referenceDataView;" + "drop table referencedata;"
+		this.prevDelete = "drop view referenceDataView;" 
+				+ "drop table referencedata;"
 				+ "drop table exceptionreferencedata;";
-		this.updateTables = "create table referenceData (\r\n" + "	comments text,\r\n"
-				+ "	totals text,\r\n" + "	percent number(3,2) not null,\r\n"
-				+ "	constraint use_com_prk primary key (comments)\r\n" + ");"
-				+ "create table exceptionreferenceData (\r\n" + "	comments text,\r\n"
-				+ "	flg number(1) default 0 not null,\r\n" + "	priority number(100) not null\r\n"
-				+ "	constraint flg_chk check(flg >= 0 and flg <= 1),\r\n"
-				+ "	constraint use_com_ork primary key (comments)\r\n" + ");"
-				+ "create view referenceDataView (username, comments, percent) as\r\n" + "select * \r\n"
-				+ "	from\r\n" + "		(\r\n"
-				+ "			select a.username, a.comments, round(cast(a.counter as real) / sum(b.counter),4) as persent\r\n"
-				+ "				from \r\n"
-				+ "					countdata a,\r\n"
-				+ "					countdata b\r\n" + "				where\r\n"
-				+ "					a.username = b.username\r\n"
-				+ "				group by\r\n"
-				+ "					a.username, a.comments\r\n" + "		)\r\n"
-				+ "	where\r\n" + "		persent > 0.01 and\r\n" + "		persent < 1;";
+		this.updateTables = "create table referenceData (\r\n" + 
+				"	comments text,\r\n" + 
+				"	totals text,\r\n" + 
+				"	percent number(3,2) not null,\r\n" + 
+				"	constraint use_com_prk primary key (comments)\r\n" + 
+				");"
+				+ "create table exceptionreferenceData (\r\n" + 
+				"	comments text,\r\n" + 
+				"	flg number(1) default 0 not null,\r\n" + 
+				"	priority number(100) not null\r\n" + 
+				"	constraint flg_chk check(flg >= 0 and flg <= 1),\r\n" + 
+				"	constraint use_com_ork primary key (comments)\r\n" + 
+				");"
+				+ "create view referenceDataView (comments, totals, percent) as\r\n" + 
+				"select * \r\n" + 
+				"	from\r\n" + 
+				"		(\r\n" + 
+				"			select a.comments, sum(b.counter) as totals, round(cast(a.counter as real) / sum(b.counter),10) as persent\r\n" + 
+				"				from \r\n" + 
+				"					countdata a,\r\n" + 
+				"					countdata b\r\n" + 
+				"				where\r\n" + 
+				"					a.username = b.username\r\n" + 
+				"				group by\r\n" + 
+				"					a.comments\r\n" + 
+				"		) t1\r\n" + 
+				"	where\r\n" + 
+				"		t1.persent > 0.01 and\r\n" + 
+				"		t1.totals > 7\r\n" + 
+				"		/*t1.comments glob '/[a-zA-Z]*?*'*/\r\n" + 
+				"	order by\r\n" + 
+				"		t1.persent desc;"
+				+ "insert into referenceData (comments, totals, percent)\r\n" + 
+				"	select rf.comments, rf.totals, rf.percent * 100\r\n" + 
+				"		from referencedataview rf\r\n" + 
+				"	where \r\n" + 
+				"		not exists (\r\n" + 
+				"			select *\r\n" + 
+				"				from referencedata\r\n" + 
+				"		);";
 		this.sql = "\r\n" + "/* データベースのテーブル作成用のデータ */\r\n" + "\r\n" + "drop table Natu_data;\r\n" + "\r\n"
 				+ "create table Natu_data(\r\n" + "	tmstamp text,\r\n"
 				+ "	number NUMERIC(5),\r\n" + "	groups text not null,\r\n"

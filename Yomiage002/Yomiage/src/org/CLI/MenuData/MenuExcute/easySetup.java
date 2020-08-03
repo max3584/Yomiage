@@ -1,5 +1,7 @@
 package org.CLI.MenuData.MenuExcute;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -76,7 +78,7 @@ public class easySetup implements Runnable {
 				for (int j = 0; j < this.dataInitialize.length; j++) {
 					int index = Arrays.asList(this.dataInitialize[0]).indexOf(searchView[i]);
 					if (index != -1) {
-						sb.append(String.format("%s", this.dataInitialize[1][index]));
+						sb.append(String.format("%s%s", this.dataInitialize[1][index], (i == searchView.length - 1)? "" : ","));
 						break;
 					} else if ("exit".equals(searchView[i])) {
 						sb.delete(0, sb.length());
@@ -90,6 +92,15 @@ public class easySetup implements Runnable {
 			}
 			this.properties = sb.substring(0);
 			this.ipf.getProperties().setProperty("Read", this.properties);
+			try {
+				this.ipf.getProperties().store(new FileOutputStream(this.ipf.getFileName()), "Yomiage Properties");
+			} catch (FileNotFoundException e) {
+				// TODO 自動生成された catch ブロック
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO 自動生成された catch ブロック
+				e.printStackTrace();
+			}
 			/*
 			 * int num = Arrays.asList(this.dataInitialize[0]).indexOf(use); if (sb.length()
 			 * > -1) { try { this.ipf.Change(this.dataInitialize[1][num]); } catch

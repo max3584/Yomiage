@@ -148,9 +148,10 @@ public class TodayReadExecution {
 				fr = new FileRead(dir, StandardCharsets.UTF_16LE);
 				// 一時保存領域
 				tmp = fr.formatRead(6);
+				
 				// 読み取り機構
 				natuData = tmp.get(tmp.size() - 1);
-
+				
 				// プロパティの値
 				properties = setup.getProperties().split(",");
 				// 読み上げする前の前処理
@@ -188,25 +189,31 @@ public class TodayReadExecution {
 											ai.getERData().get(num).getPriority()));
 							});
 						}
+						for (int prev =Integer.parseInt(natuData.getNo()) - Integer.parseInt(dl.getNo()) ; prev > 0; prev--) {
+							// 棒読みに送るための処理を記述
+							if (properties[0].equals("any") | request) {
+								// System.out.println("1対象");
+								// 読上げ例外処理
+								if (Reference.indexOf(tmp.get(tmp.size() - prev).getComment()) == -1 | 
+										EReference.indexOf(tmp.get(tmp.size() - prev).getComment()) == -1) {
 
-						// 棒読みに送るための処理を記述
-						if (properties[0].equals("any") | request) {
-							// System.out.println("1対象");
-							// 読上げ例外処理
-							if (Reference.indexOf(natuData.getComment()) == -1
-									| (EReference.indexOf(natuData.getComment()) == -1)) {
-
-								String comment = natuData.getComment().replaceAll(regex1, "")
-										.replaceAll(regex2, "").replaceAll(regex3, "")
-										.replaceAll(regex4, "").replaceAll(regex5, "")
-										.replaceAll(regex6, "").replaceAll(regex7, "")
-										.replaceAll(regex8, "").replaceAll(regex9, "")
-										.replace("\'", "").replace("\"", "");
-								if (!comment.equals("")) {
-									// console execute
-									// to C Packet Request Execute
-									cee.ConsoleCommand(String.format("\'%s:%s\'",
-											natuData.getUser(), comment));
+									String comment = tmp.get(tmp.size() - prev).getComment()
+											.replaceAll(regex1, "")
+											.replaceAll(regex2, "")
+											.replaceAll(regex3, "")
+											.replaceAll(regex4, "")
+											.replaceAll(regex5, "")
+											.replaceAll(regex6, "")
+											.replaceAll(regex7, "")
+											.replaceAll(regex8, "")
+											.replaceAll(regex9, "").replace("\'", "")
+											.replace("\"", "");
+									if (!comment.equals("")) {
+										// console execute
+										// to C Packet Request Execute
+										cee.ConsoleCommand(String.format("\'%s:%s\'",
+												tmp.get(tmp.size() - prev).getUser(), comment));
+									}
 								}
 							}
 						}
