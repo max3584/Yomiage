@@ -1,5 +1,11 @@
 package org.AI;
 
+
+/**
+ * 
+ * Ｐｙｔｈｏｎで機械学習はツクリマショウ！
+ * 
+ */
 public class Standardization {
 	
 	private int n;

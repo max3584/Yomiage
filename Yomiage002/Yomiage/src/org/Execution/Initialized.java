@@ -25,11 +25,11 @@ import org.Request.UserRequest;
  * 初期データ格納用()
  * 
  * @author max
- *
  */
 
 public class Initialized {
-
+	
+	
 	// init data field
 	private File file;
 	private DBAccess db;
@@ -37,6 +37,11 @@ public class Initialized {
 	private CalcDate date;
 
 	// constructor
+	/**フィールドの中身 
+	* @param file            プロパティファイルと、ログ取得時に使用します
+	* @param db         	 データベースへの操作を実装しているクラス
+	* @param ipf		 プロパティファイルに読み書きを行うクラス
+	* @param date         自作関数クラスで時間関連をいじるためのクラス(実行ＯＳの時間変更などはしない)*/
 	public Initialized(String dir) throws FileNotFoundException, IOException {
 		this.date = new CalcDate(new Date(), new SimpleDateFormat("yyyyMM"));
 		try {
@@ -58,19 +63,17 @@ public class Initialized {
 				System.out.println("DataBase File Create Complete!");
 				DefaultSQL defaultsql = new DefaultSQL();
 				this.db = new DBAccess("JDBC:sqlite:" + DatabaseFile.toString());
-				
+
 				String[] sql = defaultsql.getSql().replaceAll("\r\n", "").split(";");
 				for (int i = 0; i < sql.length; i++) {
 					this.db.UpdateSQLExecute(sql[i] + ";");
 				}
 				/*
-				try {
-					InitializedDatabaseCreate idc = new InitializedDatabaseCreate(this.file);
-					this.db.UpdateSQLExecute(idc.getSb().substring(0));
-				} catch (IOException e) {
-					this.db.UpdateSQLExecute(defaultsql.getSql());
-				}
-				*/
+				 * try { InitializedDatabaseCreate idc = new
+				 * InitializedDatabaseCreate(this.file);
+				 * this.db.UpdateSQLExecute(idc.getSb().substring(0)); } catch (IOException e) {
+				 * this.db.UpdateSQLExecute(defaultsql.getSql()); }
+				 */
 				this.db.close();
 			}
 			this.db = new DBAccess("JDBC:sqlite:" + DatabaseFile.toString());
@@ -142,9 +145,10 @@ public class Initialized {
 			}
 
 			RequestTime rt = new RequestTime();
-
+			// どれだけのファイル数があるかを表示
 			int row = frt.size();
 			System.out.println(String.format("\n\nMaxPage:%s", row));
+			// ＳＱＬを実行しながら、進捗を表示
 			for (int i = 0; i < row; i++)
 				for (int j = 0; j < frt.get(i).getSqls().size(); j++) {
 					System.out.print(String.format("%s\tpage:%d\t%3.2f%%\tflg:%d \r",
@@ -166,6 +170,14 @@ public class Initialized {
 	}
 
 	// class method...
+	/**
+	 * データベースの更新を行うメソッド
+	 * @param list データリストクラスの入ったリストを引数に指定
+	 * @apiNote
+	 * DataListsは格納データのことでここのパッケージではよく使う保存用のクラス
+	 * また、これを実行する前にデータベースを実行可能状態にしてから実行してください
+	 * @exception NullPointerException データベースが存在しない
+	 */
 	public void UpdateDatabase(ArrayList<DataLists> list) {
 		DatabaseInsert di = new DatabaseInsert();
 		for (int i = 0; i < list.size(); i++) {

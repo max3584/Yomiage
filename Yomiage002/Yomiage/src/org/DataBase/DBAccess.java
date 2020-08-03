@@ -9,7 +9,20 @@ import java.sql.Statement;
 
 import org.CLI.CEExpress;
 import org.sqlite.*;
-
+/**
+ * データベースを使用するためのクラス
+ * 
+ * <p><small>
+ * <a href="https://www.sqlite.org/copyright.html">copyright https://www.sqlite.org/copyright.html</a>
+ * </small></p> 
+ * (public domain)
+ * 
+ *@param st				Statement Class
+ *@param con				Connection Class
+ *@param database			Class
+ *@param debugflg			デバッグ表示を行うか行わないか
+ *@param sqlite 			SQLiteクラスを格納するためのフィールド(引用)
+ */
 public class DBAccess implements DataBaseAccess {
 
 	// inits

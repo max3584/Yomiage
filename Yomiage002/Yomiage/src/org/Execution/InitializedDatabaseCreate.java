@@ -7,6 +7,11 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
+/**
+ * 
+ * @author max
+ *必要なファイル作成とテーブル作成
+ */
 public class InitializedDatabaseCreate {
 
 	private File file;

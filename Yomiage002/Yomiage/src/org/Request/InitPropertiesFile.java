@@ -6,6 +6,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+/**
+ * 
+ * @author max
+ *
+ * プロパティファイルを自動で生成または読み込みを行うクラスです。
+ * プロパティファイルは主に読み込みのグループ分けや初期起動時なのかなどに使用します
+ *
+ *@param fileName		プロパティファイルの名前を格納するためのフィールド
+ *@param properties		プロパティファイルを操作するためのフィールド
+ */
+
 public class InitPropertiesFile {
 	
 	private String fileName;

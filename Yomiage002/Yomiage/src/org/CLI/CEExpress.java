@@ -2,12 +2,14 @@ package org.CLI;
 
 import java.io.IOException;
 
-/*  
+/**
  * 
- * 没クラス
- * 理由：ソケット通信のほうが絶対きれい！
+ * 現在使用している受け渡しクラス
  * 
- * */
+ * @param	initCommand			初期コマンドが入っているフィールド
+ * @param pb						コマンドプロンプトを実行するためのクラス
+ * 
+ */
 
 public class CEExpress implements ConsoleExecution {
 

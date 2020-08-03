@@ -10,6 +10,7 @@ public class ChangeDatabaseTable {
 		try {
 			DBAccess dba = new DBAccess("JDBC:sqlite:" + args[0]);
 			DefaultSQL sql = new DefaultSQL();
+			System.out.println("データベースのテーブル更新実行中");
 			dba.UpdateSQLExecute(sql.getPrevDelete());
 			dba.UpdateSQLExecute(sql.getUpdateTables());
 			dba.close();
@@ -17,6 +18,8 @@ public class ChangeDatabaseTable {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
+		} finally {
+			System.out.println("実行完了しました。");
 		}
 	}
 }

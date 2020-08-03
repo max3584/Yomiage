@@ -12,6 +12,19 @@ import org.Datas.ExceptionReferenceData;
 import org.Datas.ReferenceData;
 import org.Request.DatabaseInsert;
 
+/**
+ * 簡易例外処理用(統計データからの除外等で使用)
+ * 
+ * @author max
+ *
+ * @param field_db            データベースを操作するためのクラス
+ * @param field_result        データベースのselect文を実行したときに取得データの一時格納用
+ * @param field_DatabaseName  データベースの名前を格納するためのフィールド
+ * @param field_referenceData 参照用データ(ここに存在するデータがある場合処理をしないなどの指定に使用する)
+ * @param field_ERData        非参照用データ(ここに存在するデータが参照用データに存在する場合は実行するといった指定などに使用する)
+ * @param field_sqlformat     参照用データ、非参照用データ取り出しに使用する固定文のＳＱＬ
+ */
+
 public class EasyAI {
 
 	// database
@@ -26,6 +39,15 @@ public class EasyAI {
 	// sql format (default)
 	private String[] sqlFormat;
 
+	/**
+	 * 簡易ＡＩ
+	 * 
+	 * @param DatabaseName データベースの名前(引数)
+	 * 
+	 * @throws SQLException         SQL実行時例外が起こった場合発生
+	 * @throws IOException          書込みや出力時にエラーが起こった場合発生
+	 * @throws InterruptedException 割り込み処理が発生した場合に発生
+	 */
 	public EasyAI(String DatabaseName) throws SQLException, IOException, InterruptedException {
 		// database init
 		this.DatabaseName = DatabaseName;
@@ -63,10 +85,10 @@ public class EasyAI {
 
 			this.db.UpdateSQLExecute(sql);
 		}
-		
+
 		this.referenceData.clear();
 		this.ERData.clear();
-		
+
 		// reference data insert
 		this.result = this.db.SearchSQLExecute(this.sqlFormat[0]);
 		while (this.result.next()) {

@@ -10,9 +10,18 @@ import org.Request.UserRequest;
 /**
  * ユーザの画面に表示するクラスで主に、ユーザに対して入力を施す様なものを取り扱っているクラス
  * また、クラス自体にはほとんどコメントアウトが少ないため、実際に動かしているのを見ながらやる方がわかりやすいと思います。
+ *  (簡易ユーザインタフェースです)
  * 
  * @author max
- *
+ * 
+ *        
+ * @param propeties      プロファイル読込後のデータを保持するためのフィールド
+ * @param dataInitialize 固定の入力値に対して固定の出力地にするような設定(final設定)
+ * @param ipf            プロファイル読込、書込みを行うフィールド
+ * @param ur             キーボード入力を実装と任意の文字列を表示後入力可能とするような設定が入っている
+ * @param isExecution    並列実行するため、このクラスが実行可能かどうかを判定するためのフィールド
+ * @param findText       画面に表示するテキストを保存するフィールド
+ * @param console        コンソールコマンドを実行するための設定が入っている
  */
 
 public class easySetup implements Runnable {
@@ -74,7 +83,9 @@ public class easySetup implements Runnable {
 						sb.append("exit");
 						break exit;
 					} else {
-						this.ur.UserInputRequest(String.format("useCommand:%s\nこの部分でコマンドを間違えています。[Enter]を押すと流れます", searchView[i]));
+						this.ur.UserInputRequest(String.format(
+								"useCommand:%s\nこの部分でコマンドを間違えています。[Enter]を押すと流れます",
+								searchView[i]));
 					}
 				}
 			}
@@ -103,6 +114,12 @@ public class easySetup implements Runnable {
 			this.setExecution(true);
 		}
 	}
+
+	/**
+	 * 画面に表示するためのテキストを構成するためのメソッド
+	 * 
+	 * @param args それぞれ、設定された文字列に対して表示を行う(1次元配列)
+	 */
 
 	public void TextEditter(String... args) {
 		this.findText = String.format("読み上げる対象はこのようになっています\n現在：%s\n詳細：\nexit=終了,\n"
