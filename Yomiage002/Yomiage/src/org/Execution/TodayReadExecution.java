@@ -100,12 +100,12 @@ public class TodayReadExecution {
 			String regex5 = "(^|\\s)/((ca?o?(s|mo?u?f(lage)?)\\w*)\\s([*＊・\\W]+)){1,2}\\s*";
 			// {colorchanges}
 			String regex6 = "\\{[a-zA-Z+-]*\\}";
-			//伏字
+			// 伏字
 			String regex7 = "[\\\\\\{\\}\\|\\[\\]'\\(\\)<>#\\%*\\+\\-\\?_？ωー＿／＼]+";
-			
-			String regex8 = "^\\s";		
+
+			String regex8 = "^\\s";
 			String regex9 = "(^|\\s)?/\\w*";
-			
+
 			// 読み取りに必要なクラス
 			FileRead fr = new FileRead(dir, StandardCharsets.UTF_16LE);
 			// 一時保存用の領域
@@ -115,30 +115,33 @@ public class TodayReadExecution {
 			// プロパティの値
 			String[] properties;
 			// database update timer
-			//int minutes = cd.getMin();
+			// int minutes = cd.getMin();
 			// Easy AI
 			EasyAI ai = new EasyAI("JDBC:sqlite:.\\ExtendFiles\\controlData.db");
-			
+
 			// 並列処理実行用2
-			ExecutorService thread_loop = Executors.newFixedThreadPool((int)Math.sqrt(ai.getReferenceData().size()));
-			
+			ExecutorService thread_loop = Executors
+					.newFixedThreadPool((int) Math.sqrt(ai.getReferenceData().size()));
+
 			/**
 			 * AI実装部 データ定義
 			 */
 			ArrayList<String> Reference = new ArrayList<String>();
 			ArrayList<String> EReference = new ArrayList<String>();
-			
+
 			for (int i = 0; i < ai.getReferenceData().size(); i++) {
 				int num = i;
 				thread_loop.execute(() -> {
-					Reference.add(String.format("%s,%s", ai.getReferenceData().get(num).getUsername(),ai.getReferenceData().get(num).getComment()));
+					Reference.add(String.format("%s", ai.getReferenceData().get(num).getComment()));
 				});
 			}
-			
+
 			for (int i = 0; i < ai.getERData().size(); i++) {
 				int num = i;
 				thread_loop.execute(() -> {
-					EReference.add(String.format("%s,%s", ai.getERData().get(num).getUsername(), ai.getERData().get(num).getComment()));
+					if (ai.getERData().get(num).isFlg() == 0)
+						EReference.add(String.format("%s,%d", ai.getERData().get(num).getComment(),
+								ai.getERData().get(num).getPriority()));
 				});
 			}
 			do {
@@ -163,21 +166,26 @@ public class TodayReadExecution {
 
 						// スレッド処理終了
 						thread_loop.shutdown();
-						//再度、入れる
-						thread_loop = Executors.newFixedThreadPool((int)Math.sqrt(ai.getReferenceData().size()));
-						
+						// 再度、入れる
+						thread_loop = Executors.newFixedThreadPool(
+								(int) Math.sqrt(ai.getReferenceData().size()));
+
 						// 統計データ更新
 						for (int i = 0; i < ai.getReferenceData().size(); i++) {
 							int num = i;
 							thread_loop.execute(() -> {
-								Reference.add(String.format("%s,%s", ai.getReferenceData().get(num).getUsername(),ai.getReferenceData().get(num).getComment()));
+								Reference.add(String.format("%s",
+										ai.getReferenceData().get(num).getComment()));
 							});
 						}
-						
+
 						for (int i = 0; i < ai.getERData().size(); i++) {
 							int num = i;
 							thread_loop.execute(() -> {
-								EReference.add(String.format("%s,%s", ai.getERData().get(num).getUsername(), ai.getERData().get(num).getComment()));
+								if (ai.getERData().get(num).isFlg() == 0)
+									EReference.add(String.format("%s,%d",
+											ai.getERData().get(num).getComment(),
+											ai.getERData().get(num).getPriority()));
 							});
 						}
 
@@ -186,21 +194,20 @@ public class TodayReadExecution {
 							// System.out.println("1対象");
 							// 読上げ例外処理
 							if (Reference.indexOf(natuData.getComment()) == -1
-									| EReference.indexOf(natuData.getComment()) != -1) {
+									| (EReference.indexOf(natuData.getComment()) == -1)) {
 
-								// console execute
-								// to C Packet Request Execute
-								cee.ConsoleCommand(String.format("\"%s:%s\"", natuData.getUser(),
-										natuData.getComment().replaceAll(regex4, "")
-												.replaceAll(regex1, "")
-												.replaceAll(regex2, "")
-												.replaceAll(regex3, "")
-												.replaceAll(regex4, "")
-												.replaceAll(regex5, "")
-												.replaceAll(regex6, "")
-												.replaceAll(regex7, "")
-												.replaceAll(regex8, "")
-												.replaceAll(regex9, "")));
+								String comment = natuData.getComment().replaceAll(regex1, "")
+										.replaceAll(regex2, "").replaceAll(regex3, "")
+										.replaceAll(regex4, "").replaceAll(regex5, "")
+										.replaceAll(regex6, "").replaceAll(regex7, "")
+										.replaceAll(regex8, "").replaceAll(regex9, "")
+										.replace("\'", "").replace("\"", "");
+								if (!comment.equals("")) {
+									// console execute
+									// to C Packet Request Execute
+									cee.ConsoleCommand(String.format("\'%s:%s\'",
+											natuData.getUser(), comment));
+								}
 							}
 						}
 					}

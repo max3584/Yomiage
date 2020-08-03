@@ -83,8 +83,7 @@ public class easySetup implements Runnable {
 						sb.append("exit");
 						break exit;
 					} else {
-						this.ur.UserInputRequest(String.format(
-								"useCommand:%s\nこの部分でコマンドを間違えています。[Enter]を押すと流れます",
+						this.ur.UserInputRequest(String.format("useCommand:%s\nこの部分でコマンドを間違えています。[Enter]を押すと流れます",
 								searchView[i]));
 					}
 				}

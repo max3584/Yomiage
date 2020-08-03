@@ -1,26 +1,27 @@
 package org.Datas;
 
+/**
+ * 参照データ用
+ * @author max
+ *
+ *@param comment		チャットの内容
+ *@param totals			チャットの内容の発言回数
+ *@param percent			頻出率
+ */
+
 public class ReferenceData {
 
-	private String username;
 	private String comment;
+	private String totals;
 	private float percent;
 	
-	public ReferenceData(String username, String comment, float percent) {
-		this.username = username;
+	public ReferenceData(String comment, String totals, float percent) {
 		this.comment = comment;
+		this.totals = totals;
 		this.percent = percent;
 	}
 
 	// getter and setter
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
 	public String getComment() {
 		return comment;
 	}
@@ -35,6 +36,14 @@ public class ReferenceData {
 
 	public void setPercent(float percent) {
 		this.percent = percent;
+	}
+
+	public String getTotals() {
+		return totals;
+	}
+
+	public void setTotals(String totals) {
+		this.totals = totals;
 	}
 	
 }

@@ -1,27 +1,29 @@
 package org.Datas;
 
-public class ExceptionReferenceData {
+/**
+ * 
+ *  非参照データ用
+ * 
+ * @author max
+ *
+ *@param comment		チャットの内容
+ *@param priority			優先度
+ *@param flg				有効かどうか
+ */
 
-	private String username;
-	private String comment;
-	private float percent;
-	private boolean flg;
+public class ExceptionReferenceData {
 	
-	public ExceptionReferenceData(String user, String comment, float percent, boolean flg) {
-		this.username = user;
+	private String comment;
+	private int priority;
+	private int flg;
+	
+	public ExceptionReferenceData(String comment, int priority, int flg) {
 		this.comment = comment;
-		this.percent = percent;
+		this.priority = priority;
 		this.flg = flg;
 	}
 
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
+	// getter and setter
 	public String getComment() {
 		return comment;
 	}
@@ -30,20 +32,20 @@ public class ExceptionReferenceData {
 		this.comment = comment;
 	}
 
-	public float getPercent() {
-		return percent;
-	}
-
-	public void setPercent(float percent) {
-		this.percent = percent;
-	}
-
-	public boolean isFlg() {
+	public int isFlg() {
 		return flg;
 	}
 
-	public void setFlg(boolean flg) {
+	public void setFlg(int flg) {
 		this.flg = flg;
+	}
+
+	public int getPriority() {
+		return priority;
+	}
+
+	public void setPriority(int priority) {
+		this.priority = priority;
 	}
 	
 }

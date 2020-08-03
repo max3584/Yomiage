@@ -56,9 +56,7 @@ public class EasyAI {
 		this.referenceData = new ArrayList<ReferenceData>();
 		this.ERData = new ArrayList<ExceptionReferenceData>();
 		// sql formats
-		this.setSqlFormat((String[]) Arrays
-				.asList("select * from referenceDataView", "select * from exceptionreferenceData")
-				.toArray());
+		this.setSqlFormat((String[]) Arrays.asList("select * from referenceDataView", "select * from exceptionreferenceData").toArray());
 		// reference data insert
 		this.result = this.db.SearchSQLExecute(this.sqlFormat[0]);
 		while (this.result.next()) {
@@ -68,13 +66,21 @@ public class EasyAI {
 		// ErrorReference Data insert
 		this.result = this.db.SearchSQLExecute(this.sqlFormat[1]);
 		while (this.result.next()) {
-			this.ERData.add(new ExceptionReferenceData(this.result.getString("username"),
-					this.result.getString("comments"), this.result.getFloat("percent"),
-					this.result.getBoolean("flg")));
+			this.ERData.add(new ExceptionReferenceData(this.result.getString("comments"),
+					this.result.getInt("priority"), this.result.getInt("flg")));
 		}
 		this.db.close();
 	}
 
+	/**
+	 * 
+	 * データベースの再リロード
+	 * 
+	 * @param list						データベースの内容を更新するためのナチュラルデータ
+	 * @throws IOException				データベースが書き込みができないときにスローします
+	 * @throws InterruptedException	スレッドの割り込みが発生した場合スローされます
+	 * @throws SQLException			ＳＱＬが失敗した場合にスローされます
+	 */
 	public void DatabaseUpdate(ArrayList<DataLists> list) throws IOException, InterruptedException, SQLException {
 		this.db = new DBAccess(this.DatabaseName);
 		DatabaseInsert di = new DatabaseInsert();
@@ -85,25 +91,29 @@ public class EasyAI {
 
 			this.db.UpdateSQLExecute(sql);
 		}
-
+		
+		// referenceData
+		this.db.UpdateSQLExecute("insert into referenceData (comments, totals, percent) "
+				+ "select rf.comments, rf.totals, rf.percent * 100 from referencedataview where not exists ( select * from referencedata );");
+		
 		this.referenceData.clear();
 		this.ERData.clear();
 
 		// reference data insert
 		this.result = this.db.SearchSQLExecute(this.sqlFormat[0]);
 		while (this.result.next()) {
-			this.referenceData.add(new ReferenceData(this.result.getString("username"),
-					this.result.getString("comments"), this.result.getFloat("percent")));
+			this.referenceData.add(new ReferenceData(this.result.getString("comments"),
+					this.result.getString("totals"), this.result.getFloat("percent")));
 		}
 		// ErrorReference Data insert
 		this.result = this.db.SearchSQLExecute(this.sqlFormat[1]);
 		while (this.result.next()) {
-			this.ERData.add(new ExceptionReferenceData(this.result.getString("username"),
-					this.result.getString("comments"), this.result.getFloat("percent"),
-					this.result.getBoolean("flg")));
+			this.ERData.add(new ExceptionReferenceData(this.result.getString("comments"),
+					this.result.getInt("priority"), this.result.getInt("flg")));
 		}
 	}
 
+	// getter and setter
 	public void DatabaseClose() {
 		this.db.close();
 	}
