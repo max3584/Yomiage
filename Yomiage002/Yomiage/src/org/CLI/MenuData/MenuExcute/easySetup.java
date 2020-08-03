@@ -100,6 +100,10 @@ public class easySetup implements Runnable {
 			} catch (IOException e) {
 				// TODO 自動生成された catch ブロック
 				e.printStackTrace();
+			} finally {
+				if (!this.properties.equals("exit")) {
+					this.setExecution(true);
+				}
 			}
 			/*
 			 * int num = Arrays.asList(this.dataInitialize[0]).indexOf(use); if (sb.length()
@@ -111,7 +115,7 @@ public class easySetup implements Runnable {
 			 * System.out.println("コマンドを間違えています。[Enter]を押すと流れます");
 			 * this.ur.UserInputRequest(""); }
 			 */
-
+			
 		}
 
 		try {
@@ -120,8 +124,6 @@ public class easySetup implements Runnable {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
-			this.setExecution(true);
 		}
 	}
 

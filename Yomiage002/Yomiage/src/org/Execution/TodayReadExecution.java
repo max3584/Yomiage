@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.AI.EasyAI;
 import org.CLI.CEExpress;
@@ -225,22 +226,14 @@ public class TodayReadExecution {
 				// Reference.indexOf(natuData.getComment()) == -1,
 				// EReference.indexOf(natuData.getComment()) != -1));
 				// System.out.println(properties[0]);
-
 				// user input key type execution
 				if (setup.getExcution()) {
 					// profile education
-					if ("exit".equals(properties[0])) {
-						flg = false;
-					} else {
-						es.execute(setup);
-					}
-
+					es.execute(setup);
 				}
-
-				if ("exit".equals(properties[0])) {
+				if(setup.getProperties().equals("exit")) {
 					flg = false;
 				}
-
 				// dlが過去データとなるようにすること
 				dl = natuData;
 				// database 処理・・・ｗ
@@ -253,10 +246,17 @@ public class TodayReadExecution {
 				// sleep time
 				Thread.sleep(200);
 			} while (flg);
+			thread_loop.shutdown();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			es.shutdown();
+			
+			try {
+				es.awaitTermination(60, TimeUnit.MILLISECONDS);
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
 		}
 		System.out.println("Finish!!");
 	}
