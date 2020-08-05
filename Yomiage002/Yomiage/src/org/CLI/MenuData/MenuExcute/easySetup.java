@@ -118,13 +118,7 @@ public class easySetup implements Runnable {
 			
 		}
 
-		try {
-			this.console.ConsoleCommand();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.console.ConsoleCommand();
 	}
 
 	/**

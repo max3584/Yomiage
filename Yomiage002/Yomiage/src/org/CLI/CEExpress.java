@@ -18,16 +18,15 @@ public class CEExpress implements ConsoleExecution {
 
 	// constructer
 	public CEExpress() {
-		this.initCommand = ".\\ExtendFiles\\YomiageRequest.exe";
+		this.initCommand = ".\\ExtendFiles\\YomiageCPR.exe";
 	}
 
 	public CEExpress(String... args) {
 		this.pb = new ProcessBuilder(args);
 	}
 
-	@Override
-	public void ConsoleCommand(String msg) {
-		this.pb = new ProcessBuilder(this.initCommand, "\"" + msg + "\"");
+	public void ConsoleCommand(String port, String msg) {
+		this.pb = new ProcessBuilder(this.initCommand, port, msg);
 
 		try {
 			if (this.pb.inheritIO().start().waitFor() != 0) {
@@ -40,9 +39,18 @@ public class CEExpress implements ConsoleExecution {
 		}
 	}
 
-	public void ConsoleCommand() throws IOException, InterruptedException {
-		if (this.pb.inheritIO().start().waitFor() != 0) {
-			throw new IOException("実行時例外");
+	@Override
+	public void ConsoleCommand() {
+		try {
+			if (this.pb.inheritIO().start().waitFor() != 0) {
+				throw new IOException("実行時例外");
+			}
+		} catch (InterruptedException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
 		}
 
 	}

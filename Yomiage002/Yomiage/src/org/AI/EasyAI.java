@@ -56,7 +56,7 @@ public class EasyAI {
 		this.referenceData = new ArrayList<ReferenceData>();
 		this.ERData = new ArrayList<ExceptionReferenceData>();
 		// sql formats
-		this.setSqlFormat((String[]) Arrays.asList("select * from referenceDataView", "select * from exceptionreferenceData").toArray());
+		this.setSqlFormat((String[]) Arrays.asList("select * from referenceData", "select * from exceptionreferenceData").toArray());
 		// reference data insert
 		this.result = this.db.SearchSQLExecute(this.sqlFormat[0]);
 		while (this.result.next()) {

@@ -26,7 +26,7 @@ public class TodayReadExecution {
 		if (args.length < 1) {
 			throw new IndexOutOfBoundsException("引数が存在しないため");
 		}
-
+		int portNumber = Integer.parseInt(args[1]);
 		/**
 		 * Initialized Setups 初期の動作確認に使用する
 		 */
@@ -195,7 +195,7 @@ public class TodayReadExecution {
 							if (properties[0].equals("any") | request) {
 								// System.out.println("1対象");
 								// 読上げ例外処理
-								if (Reference.indexOf(tmp.get(tmp.size() - prev).getComment()) == -1 | 
+								if (Reference.indexOf(tmp.get(tmp.size() - prev).getComment()) == -1 & 
 										EReference.indexOf(tmp.get(tmp.size() - prev).getComment()) == -1) {
 
 									String comment = tmp.get(tmp.size() - prev).getComment()
@@ -212,7 +212,8 @@ public class TodayReadExecution {
 									if (!comment.equals("")) {
 										// console execute
 										// to C Packet Request Execute
-										cee.ConsoleCommand(String.format("\'%s:%s\'",
+										// portnumber, comment
+										cee.ConsoleCommand(String.valueOf(portNumber), String.format("\'%s:%s\'",
 												tmp.get(tmp.size() - prev).getUser(), comment));
 									}
 								}

@@ -47,7 +47,7 @@ public class TestRequests {
 		
 		CEExpress cee = new CEExpress();
 		System.out.println(format);
-		cee.ConsoleCommand(format);
+		cee.ConsoleCommand(String.valueOf(50001), format);
 		
 	}
 }
