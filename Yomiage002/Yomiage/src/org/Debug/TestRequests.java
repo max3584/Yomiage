@@ -14,7 +14,7 @@ public class TestRequests {
 	public static void main(String[] args) {
 	
 		
-		String dir="C:\\Users\\pukug\\Documents\\SEGA\\PHANTASYSTARONLINE2\\log\\ChatLog20200720_00.txt";
+		String dir= args[0] +"\\ChatLog20200720_00.txt";
 		
 		String format = "";
 		

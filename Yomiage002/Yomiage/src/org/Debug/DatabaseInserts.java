@@ -24,7 +24,7 @@ public class DatabaseInserts {
 
 		String[] fileName = null;
 		try {
-			dir = dus.search("C:\\users\\pukug\\documents\\sega\\phantasystaronline2\\log\\");
+			dir = dus.search(args[0]);
 			fileName = dus.Files();
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();

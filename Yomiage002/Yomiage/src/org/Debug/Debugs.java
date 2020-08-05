@@ -29,7 +29,7 @@ public class Debugs {
 
 		try {
 			dir = dus.search(
-					String.format("C:\\users\\pukug\\documents\\sega\\phantasystaronline2\\log\\ChatLog%s_00.txt", sdf.format(date)));
+					String.format("%s\\ChatLog%s_00.txt", args[0], sdf.format(date)));
 			// System.out.println(dir);
 			
 			// 読み取りに必要なクラス
