@@ -3,6 +3,10 @@
 
 drop table Natu_data;
 
+drop table referencedata;
+
+drop table exceptionreferencedata;
+
 create table Natu_data(
 	tmstamp text,
 	number NUMERIC(5),
@@ -25,8 +29,6 @@ select username, comments, count(comments) as counter
 		having count(comments) > 1
 		order by counter;
 
-drop table referencedata;
-
 create table referenceData (
 	comments text,
 	totals text,
@@ -35,12 +37,11 @@ create table referenceData (
 );
 
 create table exceptionreferenceData (
-	username text,
 	comments text,
 	flg number(1) default 0 not null,
 	priority number(100) not null
 	constraint flg_chk check(flg >= 0 and flg <= 1),
-	constraint use_com_ork primary key (username, comments)
+	constraint use_com_ork primary key (comments)
 );
 
 /* 
@@ -65,7 +66,7 @@ select *
 		) t1
 	where
 		t1.persent > 0.01 and
-		t1.totals > 7
+		t1.totals > 5
 		/*t1.comments glob '/[a-zA-Z]*?*'*/
 	order by
 		t1.persent desc;
@@ -80,3 +81,16 @@ insert into referenceData (comments, totals, percent)
 			select *
 				from referencedata
 		);
+
+/* exceptionReferenceData を更新するときに使用する */
+create table RecoveryTable (
+	comments text,
+	flg number(1) default 0 not null,
+	priority number(100) not null
+	constraint flg_chk check(flg >= 0 and flg <= 1),
+	constraint use_com_ork primary key (comments)
+);
+
+insert into RecoveryTable (comments, flg, priority) select * from exceptionreferenceData;
+
+insert into exceptionreferenceData (comments, flg, priority) select * from RecoveryTable;

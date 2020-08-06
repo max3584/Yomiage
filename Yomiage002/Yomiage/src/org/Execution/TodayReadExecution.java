@@ -74,7 +74,7 @@ public class TodayReadExecution {
 		// 読み上げた対象のデータが入っているクラス
 		DataLists dl = null;
 		// 生データが入っているクラス
-		DataLists natuData = null;
+		//DataLists natuData = null;
 		// setup start
 		easySetup setup = new easySetup();
 
@@ -122,7 +122,7 @@ public class TodayReadExecution {
 
 			// 並列処理実行用2
 			ExecutorService thread_loop = Executors
-					.newFixedThreadPool((int) Math.sqrt(ai.getReferenceData().size()));
+					.newFixedThreadPool(ai.getReferenceData().size() > 0? (int) Math.sqrt(ai.getReferenceData().size()) : 1);
 
 			/**
 			 * AI実装部 データ定義
@@ -146,22 +146,24 @@ public class TodayReadExecution {
 				});
 			}
 			do {
+				// fileData読込み
 				fr = new FileRead(dir, StandardCharsets.UTF_16LE);
 				// 一時保存領域
 				tmp = fr.formatRead(6);
 				
 				// 読み取り機構
-				natuData = tmp.get(tmp.size() - 1);
+				//natuData = tmp.get(tmp.size() - 1);
 				
 				// プロパティの値
 				properties = setup.getProperties().split(",");
 				// 読み上げする前の前処理
 				if (dl instanceof DataLists) {
-					if (!natuData.getNo().equals(dl.getNo())) {
+					if (!tmp.get(tmp.size() - 1).getNo().equals(dl.getNo())) {
 
 						// 読上げ判定式用
 						boolean request = false;
-						request = Arrays.asList(properties).indexOf(natuData.getGroup()) > -1;
+						//旧の判定式(番号ごとに変えるように変更した)
+						//request = Arrays.asList(properties).indexOf(natuData.getGroup()) > -1;
 
 						// Database統計
 						ai.DatabaseUpdate(tmp);
@@ -169,8 +171,7 @@ public class TodayReadExecution {
 						// スレッド処理終了
 						thread_loop.shutdown();
 						// 再度、入れる
-						thread_loop = Executors.newFixedThreadPool(
-								(int) Math.sqrt(ai.getReferenceData().size()));
+						thread_loop = Executors.newFixedThreadPool(ai.getReferenceData().size() > 0? (int) Math.sqrt(ai.getReferenceData().size()) : 1);
 
 						// 統計データ更新
 						for (int i = 0; i < ai.getReferenceData().size(); i++) {
@@ -190,10 +191,14 @@ public class TodayReadExecution {
 											ai.getERData().get(num).getPriority()));
 							});
 						}
-						for (int prev =Integer.parseInt(natuData.getNo()) - Integer.parseInt(dl.getNo()) ; prev > 0; prev--) {
+						//一度取得したものに大して、最新のデータまでを読み込む
+						for (int prev =Integer.parseInt(tmp.get(tmp.size() - 1).getNo()) - (Integer.parseInt(dl.getNo())) ; prev > 0; prev--) {
+							//　現在のカーソル位置でグループ設定的にあっているかの比較式
+							request = Arrays.asList(properties).indexOf(tmp.get(tmp.size() - prev).getGroup()) > -1;
 							// 棒読みに送るための処理を記述
 							if (properties[0].equals("any") | request) {
 								// System.out.println("1対象");
+								
 								// 読上げ例外処理
 								if (Reference.indexOf(tmp.get(tmp.size() - prev).getComment()) == -1 & 
 										EReference.indexOf(tmp.get(tmp.size() - prev).getComment()) == -1) {
@@ -209,12 +214,16 @@ public class TodayReadExecution {
 											.replaceAll(regex8, "")
 											.replaceAll(regex9, "").replace("\'", "")
 											.replace("\"", "");
+									
 									if (!comment.equals("")) {
 										// console execute
 										// to C Packet Request Execute
 										// portnumber, comment
+										
 										cee.ConsoleCommand(String.valueOf(portNumber), String.format("\'%s:%s\'",
 												tmp.get(tmp.size() - prev).getUser(), comment));
+										//debug
+										//System.out.println(String.format("%d \'%s:%s\'", portNumber, tmp.get(tmp.size() - prev).getUser(), comment));
 									}
 								}
 							}
@@ -222,6 +231,7 @@ public class TodayReadExecution {
 					}
 				}
 
+				
 				// debugs
 				// System.out.println(String.format("reference : %s EReference : %s",
 				// Reference.indexOf(natuData.getComment()) == -1,
@@ -236,7 +246,8 @@ public class TodayReadExecution {
 					flg = false;
 				}
 				// dlが過去データとなるようにすること
-				dl = natuData;
+				dl = tmp.get(tmp.size() - 1);
+				
 				// database 処理・・・ｗ
 				// database update
 				/*

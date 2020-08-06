@@ -12,7 +12,7 @@ public class ChangeDatabaseTable {
 			DBAccess dba = new DBAccess("JDBC:sqlite:" + args[0]);
 			DefaultSQL sql = new DefaultSQL();
 			Version ipf = new Version(".\\ExtendFiles\\Version.Properties");
-			if (!ipf.getProperties().getProperty("version").equals("v0.0.2")) {
+			if (!ipf.getProperties().getProperty("version").equals("v0.0.3")) {
 				System.out.println("データベースのテーブル更新実行中");
 				System.out.println("テーブル削除中");
 				dba.UpdateSQLExecute(sql.getPrevDelete());
@@ -21,7 +21,7 @@ public class ChangeDatabaseTable {
 				dba.UpdateSQLExecute(sql.getUpdateTables());
 				System.out.println("テーブル作成＆更新が終了しました");
 			}
-			ipf.StampVersion("v0.0.2");
+			ipf.StampVersion("v0.0.3");
 			dba.close();
 		} catch (IOException e) {
 			e.printStackTrace();
