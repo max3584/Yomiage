@@ -19,6 +19,25 @@ public class DefaultSQL {
 				"	percent number(3,2) not null,\r\n" + 
 				"	constraint use_com_prk primary key (comments)\r\n" + 
 				");"
+				+ "create view referenceDataView (comments, totals, percent) as\r\n" + 
+				"select * \r\n" + 
+				"	from\r\n" + 
+				"		(\r\n" + 
+				"			select a.comments, sum(b.counter) as totals, round(cast(a.counter as real) / sum(b.counter),10) as persent\r\n" + 
+				"				from \r\n" + 
+				"					countdata a,\r\n" + 
+				"					countdata b\r\n" + 
+				"				where\r\n" + 
+				"					a.username = b.username\r\n" + 
+				"				group by\r\n" + 
+				"					a.comments\r\n" + 
+				"		) t1\r\n" + 
+				"	where\r\n" + 
+				"		t1.persent > 0.01 and\r\n" + 
+				"		t1.totals > 5\r\n" + 
+				"		/*t1.comments glob '/[a-zA-Z]*?*'*/\r\n" + 
+				"	order by\r\n" + 
+				"		t1.persent desc;"
 				+ "insert into referenceData (comments, totals, percent)\r\n" + 
 				"	select rf.comments, rf.totals, rf.percent * 100\r\n" + 
 				"		from referencedataview rf\r\n" + 

@@ -192,7 +192,7 @@ public class TodayReadExecution {
 							});
 						}
 						//一度取得したものに大して、最新のデータまでを読み込む
-						for (int prev =Integer.parseInt(tmp.get(tmp.size() - 1).getNo()) - (Integer.parseInt(dl.getNo())) ; prev > 1; prev--) {
+						for (int prev =Integer.parseInt(tmp.get(tmp.size() - 1).getNo()) - (Integer.parseInt(dl.getNo())) ; prev > 0; prev--) {
 							//　現在のカーソル位置でグループ設定的にあっているかの比較式
 							request = Arrays.asList(properties).indexOf(tmp.get(tmp.size() - prev).getGroup()) > -1;
 							// 棒読みに送るための処理を記述
@@ -203,6 +203,8 @@ public class TodayReadExecution {
 								if (Reference.indexOf(tmp.get(tmp.size() - prev).getComment()) == -1 & 
 										EReference.indexOf(tmp.get(tmp.size() - prev).getComment()) == -1) {
 
+									String user = tmp.get(tmp.size() - prev).getUser();
+									
 									String comment = tmp.get(tmp.size() - prev).getComment()
 											.replaceAll(regex1, "")
 											.replaceAll(regex2, "")
@@ -221,7 +223,7 @@ public class TodayReadExecution {
 										// portnumber, comment
 										
 										cee.ConsoleCommand(String.valueOf(portNumber), String.format("\'%s:%s\'",
-												tmp.get(tmp.size() - prev).getUser(), comment));
+												user, comment));
 										//debug
 										//System.out.println(String.format("%d \'%s:%s\'", portNumber, tmp.get(tmp.size() - prev).getUser(), comment));
 									}
