@@ -192,7 +192,7 @@ public class TodayReadExecution {
 							});
 						}
 						//一度取得したものに大して、最新のデータまでを読み込む
-						for (int prev =Integer.parseInt(tmp.get(tmp.size() - 1).getNo()) - (Integer.parseInt(dl.getNo())) ; prev > 0; prev--) {
+						for (int prev =Integer.parseInt(tmp.get(tmp.size() - 1).getNo()) - (Integer.parseInt(dl.getNo())) ; prev > 1; prev--) {
 							//　現在のカーソル位置でグループ設定的にあっているかの比較式
 							request = Arrays.asList(properties).indexOf(tmp.get(tmp.size() - prev).getGroup()) > -1;
 							// 棒読みに送るための処理を記述
