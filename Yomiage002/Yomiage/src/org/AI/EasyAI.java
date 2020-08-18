@@ -93,7 +93,7 @@ public class EasyAI {
 		
 		// referenceData
 		this.db.UpdateSQLExecute("insert into referenceData (comments, totals, percent) "
-				+ "select rf.comments, rf.totals, rf.percent * 100 from referencedataview where not exists ( select * from referencedata );");
+				+ "select rf.comments, rf.totals, rf.percent * 100 from referencedataview rf where not exists ( select * from referencedata );");
 		
 		this.referenceData.clear();
 		this.ERData.clear();
@@ -110,6 +110,7 @@ public class EasyAI {
 			this.ERData.add(new ExceptionReferenceData(this.result.getString("comments"),
 					this.result.getInt("priority"), this.result.getInt("flg")));
 		}
+		this.db.close();
 	}
 
 	// getter and setter

@@ -1,5 +1,4 @@
-﻿
-/* データベースのテーブル作成用のデータ */
+﻿/* データベースのテーブル作成用のデータ */
 
 drop table Natu_data;
 
@@ -52,7 +51,7 @@ create table exceptionreferenceData (
 drop view referencedataview;
 
 create view referenceDataView (comments, totals, percent) as
-select * 
+select t1.comments, t1.totals, t1.persent 
 	from
 		(
 			select a.comments, sum(b.counter) as totals, round(cast(a.counter as real) / sum(b.counter),10) as persent
@@ -63,13 +62,17 @@ select *
 					a.username = b.username
 				group by
 					a.comments
-		) t1
+		) t1,
+		natu_data natu
 	where
-		t1.persent > 0.01 and
-		t1.totals > 5
-		/*t1.comments glob '/[a-zA-Z]*?*'*/
+		natu.comments = t1.comments and
+		t1.persent > 0.001 and
+		t1.totals > 5 and
+		natu.groups in ('PUBLIC', 'PARTY')
+	group by
+		t1.comments
 	order by
-		t1.persent desc;
+		t1.persent asc, t1.totals desc;
 
 /* データ挿入時の・・・sql(念のため) */
 
@@ -82,7 +85,9 @@ insert into referenceData (comments, totals, percent)
 				from referencedata
 		);
 
-/* exceptionReferenceData を更新するときに使用する */
+/*
+テーブル更新する場合に使用します
+*/
 create table RecoveryTable (
 	comments text,
 	flg number(1) default 0 not null,
@@ -91,6 +96,32 @@ create table RecoveryTable (
 	constraint use_com_ork primary key (comments)
 );
 
+/* exceptionReferenceData を更新するときに使用する */
+create table RecoveryTable2 (
+	comments text,
+	totals text,
+	percent number(3,2) not null,
+	constraint use_com_prk primary key (comments)
+);
+
+/*
+リカバリー用のテーブル
+*/
+insert into RecoveryTable2 (comments, totals, percent) select * from referenceData;
+
 insert into RecoveryTable (comments, flg, priority) select * from exceptionreferenceData;
 
+/*
+
+リカバリーから戻す作業
+
+*/
+
+drop table RecoveryTable;
+
+insert into referenceData (comments, totals, percent) select * from RecoveryTable2;
+
 insert into exceptionreferenceData (comments, flg, priority) select * from RecoveryTable;
+
+drop table RecoveryTable2;
+drop table RecoveryTable;

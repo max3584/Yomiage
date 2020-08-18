@@ -20,7 +20,7 @@ public class Version {
 			iostream.close();
 		}catch(FileNotFoundException e) {
 			// 読み込めなかった場合の処理
-			this.properties.setProperty("version", "v0.0.1");
+			this.properties.setProperty("version", "v0.0.8");
 			try {
 				this.properties.store(new FileOutputStream(this.fileName), "Version");
 			} catch (FileNotFoundException e1) {

@@ -28,8 +28,7 @@ import org.Request.UserRequest;
  */
 
 public class Initialized {
-	
-	
+
 	// init data field
 	private File file;
 	private DBAccess db;
@@ -37,19 +36,21 @@ public class Initialized {
 	private CalcDate date;
 
 	// constructor
-	/**フィールドの中身 
-	* @param file            プロパティファイルと、ログ取得時に使用します
-	* @param db         	 データベースへの操作を実装しているクラス
-	* @param ipf		 プロパティファイルに読み書きを行うクラス
-	* @param date         自作関数クラスで時間関連をいじるためのクラス(実行ＯＳの時間変更などはしない)*/
+	/**
+	 * フィールドの中身
+	 * 
+	 * @param file プロパティファイルと、ログ取得時に使用します
+	 * @param db   データベースへの操作を実装しているクラス
+	 * @param ipf  プロパティファイルに読み書きを行うクラス
+	 * @param date 自作関数クラスで時間関連をいじるためのクラス(実行ＯＳの時間変更などはしない)
+	 */
 	public Initialized(String dir) throws FileNotFoundException, IOException {
 		this.date = new CalcDate(new Date(), new SimpleDateFormat("yyyyMM"));
 		try {
-
+			
 			// properties file inits data
 			this.ipf = new InitPropertiesFile(".\\ExtendFiles\\Yomiage.properties");
 			boolean flg = Boolean.parseBoolean((String) ipf.getProperties().get("first"));
-
 			// create Files
 			this.file = new File(".\\ExtendFiles\\");
 
@@ -64,10 +65,12 @@ public class Initialized {
 				DefaultSQL defaultsql = new DefaultSQL();
 				this.db = new DBAccess("JDBC:sqlite:" + DatabaseFile.toString());
 
-				String[] sql = defaultsql.getSql().replaceAll("\r\n", "").split(";");
-				for (int i = 0; i < sql.length; i++) {
-					this.db.UpdateSQLExecute(sql[i] + ";");
-				}
+				// String[] sql = defaultsql.getSql().replaceAll("\r\n", "").split(";");
+				/*
+				 * for (int i = 0; i < sql.length; i++) { this.db.UpdateSQLExecute(sql[i] +
+				 * ";"); }
+				 */
+				this.db.UpdateSQLExecute(defaultsql.getSql());
 				/*
 				 * try { InitializedDatabaseCreate idc = new
 				 * InitializedDatabaseCreate(this.file);
@@ -147,22 +150,44 @@ public class Initialized {
 			RequestTime rt = new RequestTime();
 			// どれだけのファイル数があるかを表示
 			int row = frt.size();
-			System.out.println(String.format("\n\nMaxPage:%s", row));
+			System.out.print(String.format("\n\nMaxPage:%s\n", row));
 			// ＳＱＬを実行しながら、進捗を表示
 			for (int i = 0; i < row; i++)
 				for (int j = 0; j < frt.get(i).getSqls().size(); j++) {
-					System.out.print(String.format("%s\tpage:%d\t%3.2f%%\tflg:%d \r",
-							rt.request(System.currentTimeMillis()), i + 1,
-							(double) ((double) (j + 1) / (double) frt.get(i).getSqls().size())
-									* 100,
-							this.db.UpdateSQLExecute(frt.get(i).getSqls().get(j))));
-				}
 
+					System.out.print("ＳＱＬを実行中ですしばらくお待ちください\t\t\t\t\t\t\t\t\r");
+					// sql execution (1ファイルごとの実行)
+					int num = this.db.UpdateSQLExecute(frt.get(i).getSqls().get(j));
+					if (num > -1) {
+						// Time Page Percent datas
+						System.out.print(String.format("%s\tPage:%d\t%3.2f%%\tDatas:%d\r",
+								rt.request(System.currentTimeMillis()), i + 1,
+								(double) ((double) (i + 1) / (double) frt.size()) * 100, num));
+					} else {
+						String[] sqls = frt.get(i).getSqls().get(j).split(";");
+						int count = 1;
+						for (String sql : sqls) {
+							num = this.db.UpdateSQLExecute(sql + ";");
+							// Time Page pageEndPercent SQLinePercent flg
+							System.out.print(String.format(
+									"%s\tPage:%d\tPagePercent:%3.2f%%\tQueryLine:%3.2f%%\tflg:%d \r",
+									rt.request(System.currentTimeMillis()), i + 1,
+									(double) ((double) (i + 1) / (double) frt.size()) * 100,
+									(double) ((double) count / (double) sqls.length) * 100,
+									num));
+							count++;
+						}
+						System.out.print("\t\t\t\t 差分データ挿入完了\t\t\t\t\t\n");
+					}
+				}
+			System.out.println(String.format("\n処理終了\nかかった時間は [%s]です", rt.request(System.currentTimeMillis())));
 			this.db.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
+			this.ipf.getProperties().setProperty("read", "none");
 			this.ipf.getProperties().setProperty("first", "false");
+			this.ipf.getProperties().setProperty("date", new SimpleDateFormat("yyyyMMdd").format(System.currentTimeMillis()));
 			this.ipf.getProperties().store(new FileOutputStream(this.ipf.getFileName()), "Yomiage Properties");
 		}
 		this.file = new File(".\\ExtendFiles\\");
@@ -172,10 +197,10 @@ public class Initialized {
 	// class method...
 	/**
 	 * データベースの更新を行うメソッド
+	 * 
 	 * @param list データリストクラスの入ったリストを引数に指定
-	 * @apiNote
-	 * DataListsは格納データのことでここのパッケージではよく使う保存用のクラス
-	 * また、これを実行する前にデータベースを実行可能状態にしてから実行してください
+	 * @apiNote DataListsは格納データのことでここのパッケージではよく使う保存用のクラス
+	 *          また、これを実行する前にデータベースを実行可能状態にしてから実行してください
 	 * @exception NullPointerException データベースが存在しない
 	 */
 	public void UpdateDatabase(ArrayList<DataLists> list) {

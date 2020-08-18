@@ -35,27 +35,32 @@ public class Debugs {
 			// 読み取りに必要なクラス
 			FileRead fr = new FileRead(dir, StandardCharsets.UTF_8);
 			// 読み取り機構
-			for (String msg : fr.Reads()) {
-				String[] dump = td.TabInsert(msg);
-				System.out.println(msg);
-				// debug
-				for(int i = 0; i < dump.length; i++) {
-					System.out.println(String.format("debug%d:%s", i, dump[i]));
-				}
-				System.out.println("debug size :" + dump.length);
-				
-				if (dump.length == 6) {
-					dl.add( new DataLists(dump[0], dump[1], dump[2], dump[3], dump[4], dump[5]));
-				} else {
-					String prevComment = dl.get(dl.size() - 1).getComment();
-					String dumpComment = "";
+			try {
+				for (String msg : fr.Reads()) {
+					String[] dump = td.TabInsert(msg);
+					System.out.println(msg);
+					// debug
 					for(int i = 0; i < dump.length; i++) {
-						dumpComment += dump[i];
+						System.out.println(String.format("debug%d:%s", i, dump[i]));
 					}
-					dl.get(dl.size() - 1).setComment(prevComment + dumpComment);
+					System.out.println("debug size :" + dump.length);
+					
+					if (dump.length == 6) {
+						dl.add( new DataLists(dump[0], dump[1], dump[2], dump[3], dump[4], dump[5]));
+					} else {
+						String prevComment = dl.get(dl.size() - 1).getComment();
+						String dumpComment = "";
+						for(int i = 0; i < dump.length; i++) {
+							dumpComment += dump[i];
+						}
+						dl.get(dl.size() - 1).setComment(prevComment + dumpComment);
+					}
+					
+					System.out.println();
 				}
-				
-				System.out.println();
+			} catch (InterruptedException e) {
+				// TODO 自動生成された catch ブロック
+				e.printStackTrace();
 			}
 			//debug
 			for(int i = 0; i < dl.size(); i++) {

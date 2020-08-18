@@ -42,8 +42,7 @@ public class FileRead {
 		this.br = null;
 	}
 	
-	public ArrayList<String> Reads() throws IOException {
-		
+	public ArrayList<String> Reads() throws IOException, InterruptedException {
 		if (this.dir.equals(null)) {
 			return WhatRead();
 		}
@@ -63,28 +62,33 @@ public class FileRead {
 		
 		ArrayList<DataLists> result = new ArrayList<DataLists>();
 		TabDatas td = new TabDatas();
-		for(String line : this.Reads()) {
-			String[] dump = td.TabInsert(line);
-			if(dump.length == col) {
-				result.add(new DataLists(dump));
-			} else {
-				if("".equals(line)) {
-					continue;
+		try {
+			for(String line : this.Reads()) {
+				String[] dump = td.TabInsert(line);
+				if(dump.length == col) {
+					result.add(new DataLists(dump));
+				} else {
+					if("".equals(line)) {
+						continue;
+					}
+					String prevComment = result.get(result.size() - 1).getComment();
+					String dumpComment = "";
+					for (int i = 0; i < dump.length; i++) {
+						dumpComment += dump[i];
+					}
+					result.get(result.size() - 1).setComment(prevComment + dumpComment);
 				}
-				String prevComment = result.get(result.size() - 1).getComment();
-				String dumpComment = "";
-				for (int i = 0; i < dump.length; i++) {
-					dumpComment += dump[i];
-				}
-				result.get(result.size() - 1).setComment(prevComment + dumpComment);
 			}
+		} catch (InterruptedException e) {
+			// TODO 自動生成された catch ブロック
+			e.printStackTrace();
 		}
 		this.br.close();
 		return result;
 		
 	}
 	
-	public ArrayList<String> WhatRead() throws FileNotFoundException, IOException{
+	public ArrayList<String> WhatRead() throws FileNotFoundException, IOException, InterruptedException{
 		
 		DirectoryUseSearch dus = new DirectoryUseSearch();
 		

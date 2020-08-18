@@ -36,40 +36,52 @@ public class FileReadThred implements Runnable {
 			FileRead fr = new FileRead(this.dir, StandardCharsets.UTF_16LE);
 			TabDatas td = new TabDatas();
 			// 読み取り機構
-			for (String msg : fr.Reads()) {
-				String[] dump = td.TabInsert(msg);
+			try {
+				for (String msg : fr.Reads()) {
+					String[] dump = td.TabInsert(msg);
 
-				if (dump.length == 6) {
-					dl.add(new DataLists(dump[0], dump[1], dump[2], dump[3], dump[4], dump[5]));
-				} else {
-					if (dl.size() == 0) {
-						continue;
+					if (dump.length == 6) {
+						dl.add(new DataLists(dump[0], dump[1], dump[2], dump[3], dump[4], dump[5]));
+					} else {
+						if (dl.size() == 0) {
+							continue;
+						}
+						String prevComment = dl.get(dl.size() - 1).getComment();
+						String dumpComment = "";
+						for (int i = 0; i < dump.length; i++) {
+							dumpComment += dump[i];
+						}
+						dl.get(dl.size() - 1).setComment(prevComment + dumpComment);
 					}
-					String prevComment = dl.get(dl.size() - 1).getComment();
-					String dumpComment = "";
-					for (int i = 0; i < dump.length; i++) {
-						dumpComment += dump[i];
-					}
-					dl.get(dl.size() - 1).setComment(prevComment + dumpComment);
 				}
+			} catch (InterruptedException e) {
+				// TODO 自動生成された catch ブロック
+				e.printStackTrace();
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		/*
+		 * SQLを一括処理に変更
+		 */
+		String AllSql="";
+		
 		for (DataLists dtl : dl) {
 			// sqlformat
-			String username = san.sanitiza(dtl.getUser());
+			String username = san.sanitiza2(dtl.getUser());
+			String comment = san.sanitiza2(dtl.getComment());
 
-			this.sqls.add(String.format(
-					"insert into Natu_data values ('%s', %s, '%s', %s, '%s', '%s')",
+			AllSql += String.format(
+					"insert into Natu_data values ('%s', %s, '%s', %s, '%s', '%s');",
 					dtl.getDate(), dtl.getNo(), dtl.getGroup(), dtl.getSirial(), username,
-					dtl.getComment()));
+					comment);
 
 			// sqldebug
 			// System.out.println("sqlDebug:" + sqlFormat);
 		}
+		this.sqls.add(AllSql);
 	}
 
 	// getter and setter

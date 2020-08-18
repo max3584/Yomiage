@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Properties;
 
 /**
@@ -32,6 +33,7 @@ public class InitPropertiesFile {
 		}catch(FileNotFoundException e) {
 			// 読み込めなかった場合の処理
 			this.properties.setProperty("Read", "none");
+			this.properties.setProperty("date", new SimpleDateFormat("yyyyMMdd").format(System.currentTimeMillis()));
 			this.properties.setProperty("first", "true");
 			try {
 				this.properties.store(new FileOutputStream(this.fileName), "Yomiage Properties");

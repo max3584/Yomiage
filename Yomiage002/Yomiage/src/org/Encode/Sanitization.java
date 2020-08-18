@@ -8,4 +8,8 @@ public class Sanitization {
 		}
 		return src;
 	}
+	
+	public String sanitiza2(String src) {
+		return src.replaceAll("^\"|\"$", "").replaceAll("\'", "&27");
+	}
 }

@@ -3,8 +3,8 @@ package org.Debug;
 public class regexDebug {
 
 	public static void main(String[] args) {
-		String text = "max:/p /cmf ＊神刀スサノオ /mpal1 /spal6 /sr Ｒ／Ｃストライク打撃 Cスト打";
-		String text2 = "test: /la ichitaro2";
+		String text = "test: /p /mpal5 /sr R/リングRリング";
+		String text2 = "test: ('ω')ノ";
 		// String regex =
 		// "(^|\\s)/[a-zA-Z]*;(^|\\s)/la\\s\\w?(\\ss+\\d.\\d)?;(^|\\s)/ci\\d+?(\\s(\\d+|nw|t\\d|s\\d+)){1,4};(^|\\s)/cmf?\\b\\w?";
 		// /la ichitaro;
@@ -12,11 +12,11 @@ public class regexDebug {
 		// la
 		String regex1 = "(^|\\s)/(f|m|c)?la\\s\\w*(\\ss\\d)?";
 		// sr
-		String regex2 = "/(sr|s\\w*)?\\s[(r|l|R|C)+\\w\\W]+\\s";
+		String regex2 = "/(sr|s\\w*)?\\s[(r|l|R|L|C)+(\\w|\\W)*]+\\s?";
 		// ci
 		String regex3 = "(^|\\s)/ci\\d+?((\\s(\\d+|nw|t\\d|s\\d+)){1,4})";
 		// on off
-		String regex4 = "/\\w+\\s*(on|off)\\s*\\d*\\s*;(^|\\s)/\\w*";
+		String regex4 = "/\\w+\\s*(on|off)\\s*\\d*\\s*";
 		// cmf
 		String regex5 = "(^|\\s)/((ca?o?(s|mo?u?f(lage)?)\\w*)\\s([*＊・\\W]+)){1,2}\\s*";
 		// {colorchanges}
@@ -24,8 +24,8 @@ public class regexDebug {
 		//伏字
 		String regex7 = "[\\\\\\{\\}\\|\\[\\]'\\(\\)<>#\\%*\\+\\-\\?_？ωー＿／＼]+";
 		
-		String regex8 = "^\\s";		
-		String regex9 = "(^|\\s)?/\\w*";
+		String regex8 = "/\\w+";		
+		String regex9 = "\\s|";
 		// String regex =
 		// "^/[a-zA-Z]*;(^|\\s)/(m|s)pal?\\d;(^|\\s)/ci\\d+?((\\s(\\d+|nw|t\\d|s\\d+)){1,4});(^|\\s)/cmf?\\b\\w?;(^|\\s)/(f|m|c)?la\\s([_a-zA-Z0-9'-]+)(\\ss\\d)?;(^|\\s)/((ca?o?(s|mo?u?f(lage)?)\\w*)\\s([*＊・\\w]+)){1,2}\\s*;/\\w+\\s*(on|off)\\s*\\d*\\s*;(^|\\s)/\\w*;^\\s";
 		// ^\";(^|\s)/ci\d+?((\s(\d+|nw|t\d|s\d+)){1,4});(^|\s)/cmf?\\b\\w?;(^|\s)/(f|m|c)?la\s([_a-zA-Z0-9'-]+)(\ss\d)?;(^|\s)/((ca?o?(s|mo?u?f(lage)?)\w*)\s([*＊・\w]+)){1,2}\s*;/\w+\s*(on|off)\s*\d*\s*;(^|\s)/\w*;^\s
@@ -41,7 +41,7 @@ public class regexDebug {
 		System.out.println(String.format("regex9: %s", text.replaceAll(regex9, "")));
 		System.out.println(text.replaceAll(regex1, "").replaceAll(regex2, "").replaceAll(regex3, "")
 				.replaceAll(regex4, "").replaceAll(regex5, "").replaceAll(regex6, "").replaceAll(regex7, "")
-				.replaceAll(regex8, "").replaceAll(regex9, ""));
+				.replaceAll(regex8, "").replaceAll(regex9, "").replaceAll("^\"|\"$", ""));
 
 		System.out.println();
 		System.out.println(String.format("regex1: %s", text2.replaceAll(regex1, "")));
@@ -54,7 +54,7 @@ public class regexDebug {
 		System.out.println(String.format("regex9: %s", text2.replaceAll(regex9, "")));
 		System.out.println(text2.replaceAll(regex1, "").replaceAll(regex3, "").replaceAll(regex4, "")
 				.replaceAll(regex5, "").replaceAll(regex6, "").replaceAll(regex2, "").replaceAll(regex8, "")
-				.replaceAll(regex9, ""));
+				.replaceAll(regex9, "").replaceAll("\'", "&27"));
 
 	}
 

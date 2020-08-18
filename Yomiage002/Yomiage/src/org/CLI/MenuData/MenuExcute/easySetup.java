@@ -43,6 +43,9 @@ public class easySetup implements Runnable {
 
 	// 実行可能設定
 	private boolean isExecution;
+	
+	// ログ表記用の設定
+	private boolean isLogPreview;
 	// find text
 	private String findText;
 
@@ -51,8 +54,9 @@ public class easySetup implements Runnable {
 	public easySetup() {
 		this.ur = new UserRequest();
 		this.ipf = new InitPropertiesFile(".\\ExtendFiles\\Yomiage.properties");
-		this.isExecution = true;
+		this.setExecution(true);
 		this.properties = "none";
+		this.setLogPreview(false);
 		this.TextEditter(this.properties, this.dataInitialize[0][0], this.dataInitialize[0][1],
 				this.dataInitialize[0][2], this.dataInitialize[0][3], this.dataInitialize[0][4],
 				this.dataInitialize[0][5]);
@@ -75,6 +79,12 @@ public class easySetup implements Runnable {
 			StringBuffer sb = new StringBuffer();
 			String[] searchView = use.split(",");
 			exit: for (int i = 0; i < searchView.length; i++) {
+				if(searchView[i].equals("view")) {
+					this.View();
+					sb.delete(0, sb.length());
+					sb.append(this.properties);
+					break;
+				}
 				for (int j = 0; j < this.dataInitialize.length; j++) {
 					int index = Arrays.asList(this.dataInitialize[0]).indexOf(searchView[i]);
 					if (index != -1) {
@@ -87,6 +97,7 @@ public class easySetup implements Runnable {
 					} else {
 						this.ur.UserInputRequest(String.format("useCommand:%s\nこの部分でコマンドを間違えています。[Enter]を押すと流れます",
 								searchView[i]));
+						
 					}
 				}
 			}
@@ -122,6 +133,20 @@ public class easySetup implements Runnable {
 	}
 
 	/**
+	 * ログを表示するための区切りです。
+	 */
+	private void View() {
+		this.setLogPreview(true);
+		String use = this.ur.UserInputRequest("終了する場合は[quit]またはexitを入力してください\n");
+		while(!use.equals("exit") & !use.equals("quit")) {
+			System.out.println("コマンドを間違えています！！");
+			use = this.ur.UserInputRequest("終了する場合は[quit]またはexitを入力してください\n");
+		}
+		this.console.ConsoleCommand();
+		this.setLogPreview(false);
+	}
+
+	/**
 	 * 画面に表示するためのテキストを構成するためのメソッド
 	 * 
 	 * @param args それぞれ、設定された文字列に対して表示を行う(1次元配列)
@@ -129,8 +154,8 @@ public class easySetup implements Runnable {
 
 	public void TextEditter(String... args) {
 		this.findText = String.format("読み上げる対象はこのようになっています\n現在：%s\n詳細：\nexit=終了,\n"
-				+ "none = なし,\n%s = any,\n%s = 全体チャット,\n%s = パーティーチャット,\n%s = プライベートチャット(wis),\n%s = チームチャット,\n%s = グループチャット"
-				+ "\n変更する場合は、例の通りに入力してください >A[Enter] 複数入れる場合は[,]で区切ってください\n", args[0], args[1], args[2],
+				+ "none = なし,\n%s = any,\n%s = 全体チャット,\n%s = パーティーチャット,\n%s = プライベートチャット(wis),\n%s = チームチャット,\n%s = グループチャット\nview = ログ表示"
+				+ "\n変更する場合は、例の通りに入力してください >all[Enter] 複数入れる場合は[,]で区切ってください\n", args[0], args[1], args[2],
 				args[3], args[4], args[5], args[6]);
 	}
 
@@ -189,6 +214,14 @@ public class easySetup implements Runnable {
 
 	public void setProperties(String properties) {
 		this.properties = properties;
+	}
+
+	public boolean isLogPreview() {
+		return isLogPreview;
+	}
+
+	public void setLogPreview(boolean isLogPreview) {
+		this.isLogPreview = isLogPreview;
 	}
 
 }
