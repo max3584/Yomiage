@@ -1,6 +1,8 @@
 package org.DataBase;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -8,7 +10,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.CLI.CEExpress;
-import org.sqlite.*;
 /**
  * データベースを使用するためのクラス
  * 
@@ -64,6 +65,17 @@ public class DBAccess implements DataBaseAccess {
 			comment = "not connection";
 		} catch (ClassNotFoundException e) {
 			comment = "Not Classes!!!!!!";
+			
+			System.out.println(comment);
+			
+			String dir = System.getProperty("java.home");
+			File run_java = new File(String.format("%s\\lib\\ext\\", dir));
+			File pkg = new File(".\\lib\\sqlite-jdbc-3.27.2.1.jar");
+			Files.copy(pkg.toPath(), run_java.toPath());
+			System.out.println("コピー完了");
+			System.out.println("再度起動よろしくお願いします");
+			new CEExpress("cmd" , "/c", "pause").ConsoleCommand();;
+			/*
 			System.out.println("クラスが存在しないようです。URLを出すのでこれをブラウザにコピーしてそのサイトからダウンロードしてください");
 			System.out.println("その後、javaのランタイムが入っている C:\\Program Files\\Java\\jre<JRE_version>\\jre\\lib\\ext に入れてください");
 			new CEExpress("cmd", "/c", "start","https://bitbucket.org/xerial/sqlite-jdbc/downloads/sqlite-jdbc-3.27.2.1.jar").ConsoleCommand();;
@@ -74,6 +86,7 @@ public class DBAccess implements DataBaseAccess {
 			new CEExpress("cmd", "/c", "explorer", "C:\\Program Files\\Java\\").ConsoleCommand();;
 			new CEExpress("cmd", "/c", "pause");
 			throw new Error("このソフトウェアで扱うクラスがないため、一度終了処理を行います。");
+			*/
 		} finally {
 			// log
 			if (this.debugflg) {
