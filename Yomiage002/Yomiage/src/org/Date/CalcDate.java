@@ -51,15 +51,15 @@ public class CalcDate {
 		this.day -= num;
 		if (this.day <= 0) {
 			this.prevMonth(1);
-			this.day -= this.CalcDay(this.month + 1);
+			this.day = this.CalcDay(this.getMonth()) - this.day;
 		}
 	}
 	
 	public void nextDay(int num) {
 		this.day += num;
-		if (this.day > this.CalcDay(this.month+1)) {
+		if (this.day > this.CalcDay(this.month)) {
 			this.nextMonth(1);
-			this.day %= this.CalcDay(this.month + 1);
+			this.day -= this.CalcDay(this.month);
 		}
 	}
 	

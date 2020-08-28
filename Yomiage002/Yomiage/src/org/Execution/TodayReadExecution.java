@@ -11,15 +11,28 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.AI.EasyAI;
 import org.CLI.CEExpress;
 import org.CLI.MenuData.MenuExcute.easySetup;
+import org.DataBase.DocumentDatabase;
 import org.Datas.DataLists;
 import org.Date.CalcDate;
+import org.Encode.Sanitization;
 import org.Readers.FileRead;
 import org.Readers.Directory.DirectoryUseSearch;
+import org.xml.sax.SAXException;
 
 public class TodayReadExecution {
+	/**
+	 * 
+	 * メインプログラム
+	 * 
+	 * @param args [0]ログファイルパス [1] ポート番号 [2]コメントジェネレータ
+	 * @throws IndexOutOfBoundsException 配列が存在しない場合スローされます
+	 * @throws IOException               入出力に異常が発生した場合スローされます。
+	 */
 
 	public static void main(String... args) throws IndexOutOfBoundsException, IOException {
 
@@ -33,15 +46,24 @@ public class TodayReadExecution {
 		/**
 		 * Initialized Setups 初期の動作確認に使用する
 		 */
-		Initialized init = new Initialized(args[0]);
+		new Initialized(args[0]);
 		// PSO2ログファイルパス格納用データ
 		String psoLogFileDir = args[0];
-		
-		// Html5 CommentGenerater機能を入れるかどうか
-		// boolean commentgenerater = Integer.parseInt(args[1]) == 1;
-		String commentGeneraterUrl = "";
+
+		// Html5 CommentGenerater機能が使えるのか
+		boolean commentgenerater = false;
+		// html5 CommentGeneraterＸＭＬ保持用
+		DocumentDatabase dd = null;
+		// HTML5 Comment.xml取得するための処理
 		if (args.length > 2) {
-			commentGeneraterUrl = args[2];
+			try {
+				dd = new DocumentDatabase(args[2]);
+				dd = new DocumentDatabase(String.format("%s\\comment.xml", dd.getValue("HcgPath")));
+			} catch (ParserConfigurationException e) {
+				e.printStackTrace();
+			} catch (SAXException e) {
+				e.printStackTrace();
+			}
 		}
 		// init datas
 		// 日付出力のフォーマット指定
@@ -49,32 +71,11 @@ public class TodayReadExecution {
 		// 今日の日付を取得
 		CalcDate cd = new CalcDate(new Date(), sdf);
 		// ディレクトリpath格納用
-		String dir;
+		String dir = "";
 		// directory use search
 		DirectoryUseSearch dus = new DirectoryUseSearch();
 		// satart up datas
-		try {
-			// date setup
-			String date;
-			if (cd.getHour() < 7 | cd.getHour() > 23) {
-				cd.prevDay(1);
-			}
-			date = cd.getCalcData();
-			// directoryを入れる
-			// dir = dus.search(String.format("%s\\ChatLog%s_00.txt", psoLogFileDir, date));
-			try {
-				dir = dus.search(String.format("%s\\ChatLog%s_00.txt", psoLogFileDir, date));
-			} catch (FileNotFoundException e) {
-				dir = dus.search(String.format("%s\\ChatLog%s_00.txt", psoLogFileDir, date));
-			}
 
-			System.out.printf("\n\nPath: %s\n\n", dir);
-
-		} catch (FileNotFoundException e) {
-			// e.printStackTrace();
-			// ファイルがない場合の処理
-			throw new FileNotFoundException("今日のログファイルがありません(起動してから、再度お試しください)");
-		}
 		// loop data update(real time comment readers)
 		// 読み上げた対象のデータが入っているクラス
 		int prevSize = 0;
@@ -85,10 +86,6 @@ public class TodayReadExecution {
 
 		// 並列処理実行用
 		ExecutorService es = Executors.newFixedThreadPool(1);
-
-		/**
-		 * /p /cmf ＊神刀スサノオ /mpal1 /spal18 /sr Ｒ／Ｃストライク Ｃスト(迷彩変更)
-		 */
 
 		try {
 			// inits
@@ -112,18 +109,40 @@ public class TodayReadExecution {
 			String regex8 = "/\\w+";
 			String regex9 = "\\s";
 
+			/*
+			 * サニタイズ(DBとの文字との調整用)
+			 */
 			String sanitiza = "&27";
 
 			// 読み取りに必要なクラス
-			FileRead fr = new FileRead(dir, StandardCharsets.UTF_16LE);
+			FileRead fr;
 			// 一時保存用の領域
-			ArrayList<DataLists> tmp = fr.formatRead(6);
+			ArrayList<DataLists> tmp;
 			// Console Execution Express
 			CEExpress cee = new CEExpress();
 			// プロパティの値
 			String[] properties;
 			// database update timer
 			// int minutes = cd.getMin();
+			// date setup
+			String date;
+			// 翌日7時までは前のテキストデータを使うためそのための処理
+			if (cd.getHour() < 7 | cd.getHour() > 23) {
+				cd.prevDay(1);
+			}
+			
+			String holdFile = ".\\ExtendFiles\\hold.txt";
+			
+			date = cd.getCalcData();
+			// directoryを入れる
+			try {
+				dir = dus.search(String.format("%s\\ChatLog%s_00.txt", psoLogFileDir, date));
+			} catch (FileNotFoundException e) {
+				dir = dus.search(holdFile);
+			}
+
+			System.out.printf("\n\nPath: %s\n\n", dir);
+			
 			// Easy AI
 			EasyAI ai = new EasyAI("JDBC:sqlite:.\\ExtendFiles\\controlData.db");
 
@@ -182,16 +201,21 @@ public class TodayReadExecution {
 						// 棒読みに送るための処理を記述
 						if (properties[0].equals("any") | request) {
 							// System.out.println("1対象");
+							// ユーザー名の確保
 							String user = tmp.get(tmp.size() - prev).getUser().replaceAll(sanitiza,
 									"\'");
 
+							// 正規表現で読まれないものを指定した後のものを格納
 							String comment = tmp.get(tmp.size() - prev).getComment()
 									.replaceAll(regex1, "").replaceAll(regex2, "")
 									.replaceAll(regex3, "").replaceAll(regex4, "")
 									.replaceAll(regex5, "").replaceAll(regex6, "")
 									.replaceAll(regex8, "").replaceAll(regex9, "")
 									.replaceAll(sanitiza, "\'");
-							String checking = tmp.get(tmp.size() - prev).getComment();
+
+							// ＤＢとの比較用変数
+							String checking = tmp.get(tmp.size() - prev).getComment()
+									.replaceAll(sanitiza, "\'");
 
 							if (setup.isLogPreview()) {
 								// print preview
@@ -207,7 +231,15 @@ public class TodayReadExecution {
 								// console execute
 								// to C Packet Request Execute
 								// portnumber, comment
+								if (dd instanceof DocumentDatabase) {
+									String[] key = { "handle", "no", "owner", "service",
+											"time" };
+									String[] value = { user, "0", "0", "PSO2", String
+											.valueOf(System.currentTimeMillis()) };
 
+									dd.addNode(dd.getDocument().createElement("comment"),
+											key, value, comment);
+								}
 								cee.ConsoleCommand(String.valueOf(portNumber),
 										String.format("\"%s: %s\"", user, comment));
 							}
@@ -249,13 +281,12 @@ public class TodayReadExecution {
 						e.printStackTrace();
 					}
 
-					// 過去のサイズにするが過去データとなるようにすること
+					// 過去データとなるようにすること
 					prevSize = tmp.size();
 				}
 
 				// Date debug = new Date();
-				Thread thread = Thread.currentThread();
-				thread.sleep(200);
+				Thread.currentThread().sleep(200);
 				// debugs
 				// System.out.println(String.format("tmp_No: %s\t dl_No: %s", tmp.get(tmp.size()
 				// - 1).getNo(), dl.getNo()));
@@ -274,6 +305,19 @@ public class TodayReadExecution {
 					// profile education
 					es.execute(setup);
 				}
+				
+				// 翌日7時までは前のテキストデータを使うためそのための処理
+				if (cd.getHour() < 7 | cd.getHour() > 23) {
+					cd.prevDay(1);
+				}
+				date = cd.getCalcData();
+				// directoryを入れる
+				try {
+					dir = dus.search(String.format("%s\\ChatLog%s_00.txt", psoLogFileDir, date));
+				} catch (FileNotFoundException e) {
+					dir = dus.search(holdFile);
+				}
+
 
 			} while (flg);
 			thread_loop.shutdown();

@@ -121,8 +121,7 @@ public class Initialized {
 			ArrayList<String> fileList = new ArrayList<String>();
 
 			for (int i = 0; i < fileName.length; i++) {
-				if (fileName[i].indexOf(String.format("ChatLog%s",
-						date_flg ? String.valueOf(use) : flg ? "" : date.getData())) == 0) {
+				if (fileName[i].indexOf(String.format("ChatLog%s", date_flg ? String.valueOf(use) : flg ? "" : date.getData())) == 0) {
 					fileList.add(fileName[i]);
 				}
 			}

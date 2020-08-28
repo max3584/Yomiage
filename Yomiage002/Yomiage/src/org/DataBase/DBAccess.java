@@ -74,7 +74,7 @@ public class DBAccess implements DataBaseAccess {
 			Files.copy(pkg.toPath(), run_java.toPath());
 			System.out.println("コピー完了");
 			System.out.println("再度起動よろしくお願いします");
-			new CEExpress("cmd" , "/c", "pause").ConsoleCommand();;
+			new CEExpress("cmd" , "/c", "pause").ConsoleCommand();
 			/*
 			System.out.println("クラスが存在しないようです。URLを出すのでこれをブラウザにコピーしてそのサイトからダウンロードしてください");
 			System.out.println("その後、javaのランタイムが入っている C:\\Program Files\\Java\\jre<JRE_version>\\jre\\lib\\ext に入れてください");
