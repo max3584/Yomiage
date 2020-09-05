@@ -23,7 +23,7 @@ public class CharEncode {
 			String replacesrc = src.substring(a, a + 2).replace("%", "");
 			src = src.replace(String.format("%%%s" , replacesrc), this.escapeChangeStr);
 			binary.add(Byte.parseByte(replacesrc));
-			a = src.indexOf("%");
+			a += 3;
 			
 		}while(a > 0);
 		

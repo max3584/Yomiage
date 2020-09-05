@@ -17,7 +17,7 @@ public class CalcDate {
 	private int hour;
 	private int min;
 	private int sec;
-	
+
 	// constructor1
 	public CalcDate(Date date) {
 		this.date = date;
@@ -29,94 +29,115 @@ public class CalcDate {
 		this.hour = Integer.parseInt(datas[3]);
 		this.min = Integer.parseInt(datas[4]);
 		this.sec = Integer.parseInt(datas[5]);
-		
+
 	}
+
 	// constructor2
 	public CalcDate(Date date, SimpleDateFormat sdf) {
 		this(date);
 		this.sdf = sdf;
 	}
-	
+
 	// CalcDays(Month)
 	public int CalcDay(int Month) {
-		return (28 
-				+ Math.abs(Math.signum((this.month - 2) * (this.month - 4) * (this.month - 6) * (this.month - 9) * (this.month - 11))) * 3
-				+ Math.abs(Math.signum((this.month - 2) * (this.month - 1) * (this.month - 3) * (this.month - 5) * (this.month - 7) * (this.month - 8) * (this.month - 10) * (this.month - 12))) * 2
-				+ (this.year % 100) != 0 & (this.year % 400) == 0 ? (this.month == 2)? 1 : 0 : 0);
+
+		int init = 28;
+
+		// 月から、日数を出す
+		/**
+		 *  上段：31日以外の月
+		 *  下段：30日以外の月
+		 *  
+		 *  注釈：2月は上段下段ともにあるため０が返ります
+		 */
+		init += (Math.abs(Math.signum((Month - 2) * (Month - 4) * (Month - 6) * (Month - 9) * (Month - 11))) * 3
+				+ Math.abs(Math.signum((Month - 2) * (Month - 1) * (Month - 3) * (Month - 5) * (Month - 7)
+						* (Month - 8) * (Month - 10) * (Month - 12))) * 2);
+		//うるう年用の計算
+		init +=  (Month % 100) != 0 & (Month % 400) == 0 ? (Month == 2) ? 1 : 0 : 0;
+
+		return init;
+		/*
+		return 28 + (Math.abs(Math.signum((Month - 2) * (Month - 4) * (Month - 6) * (Month - 9) * (Month - 11)))
+				* 3
+				+ Math.abs(Math.signum((Month - 2) * (Month - 1) * (Month - 3) * (Month - 5) * (Month - 7)
+						* (Month - 8) * (Month - 10) * (Month - 12))) * 2)
+				+ (Month % 100) != 0 & (Month % 400) == 0 ? (Month == 2) ? 1 : 0 : 0;
+				*/
 	}
-	
-	
+
 	// day Calcs
-	public void  prevDay(int num) {
+	public void prevDay(int num) {
 		this.day -= num;
 		if (this.day <= 0) {
 			this.prevMonth(1);
 			this.day = this.CalcDay(this.getMonth()) - this.day;
 		}
 	}
-	
+
 	public void nextDay(int num) {
 		this.day += num;
+		//int debug = this.CalcDay(this.month);
 		if (this.day > this.CalcDay(this.month)) {
 			this.nextMonth(1);
 			this.day -= this.CalcDay(this.month);
 		}
 	}
-	
+
 	// month calcs
 	public void prevMonth(int num) {
 		this.month -= num;
-		if(this.month < 0) {
+		if (this.month < 0) {
 			this.prevYear(Math.abs(this.month));
 			this.month = Math.abs(this.month) % 12;
 		}
 	}
-	
+
 	public void nextMonth(int num) {
 		this.month += num;
 		if (this.month > 12) {
-			this.nextYear((int)(this.month / 12));
+			this.nextYear((int) (this.month / 12));
 			this.month %= 12;
 		}
 	}
-	
+
 	// year calcs
 	public void prevYear(int num) {
 		this.year -= num;
 	}
-	
+
 	public void nextYear(int num) {
 		this.year += num;
 	}
-	
+
 	// print Method
 	public String getData() {
 		return this.sdf.format(this.date);
 	}
-	
+
 	public String getData(String format) {
-		return  new SimpleDateFormat(format).format(this.date);
+		return new SimpleDateFormat(format).format(this.date);
 	}
-	
+
 	// print method2
 	public String getCalcData() {
 		Calendar newDate = Calendar.getInstance();
 		newDate.set(this.year, this.month - 1, this.day);
 		return this.sdf.format(newDate.getTime());
 	}
-	
+
 	public String getCalcData(String format) {
 		Calendar newDate = Calendar.getInstance();
 		newDate.set(this.year, this.month, this.day, this.hour, this.min, this.sec);
-		
+
 		return new SimpleDateFormat(format).format(newDate.getTime());
 	}
-	
+
 	public void update() {
 		this.date = new Date();
 	}
 
-	//gettear and setter
+	// gettear and setter
 	public Date getDate() {
 		return date;
 	}
@@ -180,5 +201,5 @@ public class CalcDate {
 	public void setSec(int sec) {
 		this.sec = sec;
 	}
-	
+
 }

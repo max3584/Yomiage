@@ -47,7 +47,7 @@ public class Initialized {
 	public Initialized(String dir) throws FileNotFoundException, IOException {
 		this.date = new CalcDate(new Date(), new SimpleDateFormat("yyyyMM"));
 		try {
-			
+
 			// properties file inits data
 			this.ipf = new InitPropertiesFile(".\\ExtendFiles\\Yomiage.properties");
 			boolean flg = Boolean.parseBoolean((String) ipf.getProperties().get("first"));
@@ -121,7 +121,8 @@ public class Initialized {
 			ArrayList<String> fileList = new ArrayList<String>();
 
 			for (int i = 0; i < fileName.length; i++) {
-				if (fileName[i].indexOf(String.format("ChatLog%s", date_flg ? String.valueOf(use) : flg ? "" : date.getData())) == 0) {
+				if (fileName[i].indexOf(String.format("ChatLog%s",
+						date_flg ? String.valueOf(use) : flg ? "" : date.getData())) == 0) {
 					fileList.add(fileName[i]);
 				}
 			}
@@ -165,28 +166,37 @@ public class Initialized {
 					} else {
 						String[] sqls = frt.get(i).getSqls().get(j).split(";");
 						int count = 1;
+
+						double page = 0;
+						double query = 0;
+
 						for (String sql : sqls) {
 							num = this.db.UpdateSQLExecute(sql + ";");
+
+							page = (double) ((double) (i + 1) / (double) frt.size()) * 100;
+							query = (double) ((double) count / (double) sqls.length) * 100;
+
 							// Time Page pageEndPercent SQLinePercent flg
 							System.out.print(String.format(
-									"%s\tPage:%d\tPagePercent:%3.2f%%\tQueryLine:%3.2f%%\tflg:%d \r",
+									"%s\tPage:%d\tPagePercent:%s%%\tQueryLine:%s%%\tflg:%d \r",
 									rt.request(System.currentTimeMillis()), i + 1,
-									(double) ((double) (i + 1) / (double) frt.size()) * 100,
-									(double) ((double) count / (double) sqls.length) * 100,
-									num));
+									String.format("%s%3.2f", page < 10 ? "0" : "", page),
+									String.format("%s%3.2f", query < 10? "0" : "", query), num));
 							count++;
 						}
 						System.out.print("\t\t\t\t 差分データ挿入完了\t\t\t\t\t\n");
 					}
 				}
-			System.out.println(String.format("\n処理終了\nかかった時間は [%s]です", rt.request(System.currentTimeMillis())));
+			System.out.println(
+					String.format("\n処理終了\nかかった時間は [%s]です", rt.request(System.currentTimeMillis())));
 			this.db.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			this.ipf.getProperties().setProperty("read", "none");
 			this.ipf.getProperties().setProperty("first", "false");
-			this.ipf.getProperties().setProperty("date", new SimpleDateFormat("yyyyMMdd").format(System.currentTimeMillis()));
+			this.ipf.getProperties().setProperty("date",
+					new SimpleDateFormat("yyyyMMdd").format(System.currentTimeMillis()));
 			this.ipf.getProperties().store(new FileOutputStream(this.ipf.getFileName()), "Yomiage Properties");
 		}
 		this.file = new File(".\\ExtendFiles\\");

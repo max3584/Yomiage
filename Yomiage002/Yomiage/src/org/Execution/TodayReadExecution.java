@@ -17,6 +17,8 @@ import org.AI.EasyAI;
 import org.CLI.CEExpress;
 import org.CLI.MenuData.MenuExcute.easySetup;
 import org.DataBase.DocumentDatabase;
+import org.DataBase.NetworkDocumentDatabase;
+import org.DataBase.NoSQLDocumentFormatXml;
 import org.Datas.DataLists;
 import org.Date.CalcDate;
 import org.Encode.Sanitization;
@@ -53,11 +55,19 @@ public class TodayReadExecution {
 		// Html5 CommentGenerater機能が使えるのか
 		boolean commentgenerater = false;
 		// html5 CommentGeneraterＸＭＬ保持用
-		DocumentDatabase dd = null;
+		NoSQLDocumentFormatXml dd = null;
 		// HTML5 Comment.xml取得するための処理
 		if (args.length > 2) {
+			commentgenerater = true;
 			try {
-				dd = new DocumentDatabase(args[2]);
+				// コメントジェネレータのネットワーク指定の場合の処理
+				if (args[2].indexOf("http") > -1) {
+					dd = new NetworkDocumentDatabase(args[2], "r");
+				} else {
+					// コメントジェネレータの直接ファイル指定の場合の処理
+					dd = new DocumentDatabase(args[2]);
+
+				}
 				dd = new DocumentDatabase(String.format("%s\\comment.xml", dd.getValue("HcgPath")));
 			} catch (ParserConfigurationException e) {
 				e.printStackTrace();
@@ -90,6 +100,7 @@ public class TodayReadExecution {
 		try {
 			// inits
 			boolean flg = true;
+
 			// 読み上げない文字列を消すための領域
 			// la
 			String regex1 = "(^|\\s)/(f|m|c)?la\\s\\w*(\\ss\\d)?";
@@ -130,8 +141,10 @@ public class TodayReadExecution {
 			if (cd.getHour() < 7 | cd.getHour() > 23) {
 				cd.prevDay(1);
 			}
-			
+
 			String holdFile = ".\\ExtendFiles\\hold.txt";
+
+			cd.prevDay(1);
 			
 			date = cd.getCalcData();
 			// directoryを入れる
@@ -142,7 +155,7 @@ public class TodayReadExecution {
 			}
 
 			System.out.printf("\n\nPath: %s\n\n", dir);
-			
+
 			// Easy AI
 			EasyAI ai = new EasyAI("JDBC:sqlite:.\\ExtendFiles\\controlData.db");
 
@@ -231,14 +244,17 @@ public class TodayReadExecution {
 								// console execute
 								// to C Packet Request Execute
 								// portnumber, comment
-								if (dd instanceof DocumentDatabase) {
+								if (commentgenerater) {
 									String[] key = { "handle", "no", "owner", "service",
 											"time" };
-									String[] value = { user, "0", "0", "PSO2", String
-											.valueOf(System.currentTimeMillis()) };
+									String[] value = { user, "0", "0", "PSO2",
+											String.valueOf(System.currentTimeMillis()
+													/ 1000) };
 
-									dd.addNode(dd.getDocument().createElement("comment"),
-											key, value, comment);
+									dd.addNode(((DocumentDatabase) dd).getDocument()
+											.createElement("comment"), key, value,
+											comment);
+
 								}
 								cee.ConsoleCommand(String.valueOf(portNumber),
 										String.format("\"%s: %s\"", user, comment));
@@ -305,19 +321,22 @@ public class TodayReadExecution {
 					// profile education
 					es.execute(setup);
 				}
-				
+
 				// 翌日7時までは前のテキストデータを使うためそのための処理
-				if (cd.getHour() < 7 | cd.getHour() > 23) {
-					cd.prevDay(1);
+				if (new CalcDate(new Date()).getDay() != cd.getDay() & cd.getHour() >= 7  & cd.getHour() < 24) {
+					
+					cd.nextDay(1);
 				}
 				date = cd.getCalcData();
 				// directoryを入れる
 				try {
 					dir = dus.search(String.format("%s\\ChatLog%s_00.txt", psoLogFileDir, date));
+					if(setup.isLogPreview()) {
+						System.out.print(String.format("Path: %s \r", dir));
+					}
 				} catch (FileNotFoundException e) {
 					dir = dus.search(holdFile);
 				}
-
 
 			} while (flg);
 			thread_loop.shutdown();
