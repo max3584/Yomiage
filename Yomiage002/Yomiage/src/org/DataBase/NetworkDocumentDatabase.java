@@ -109,7 +109,6 @@ public class NetworkDocumentDatabase implements NoSQLDocumentFormatXml {
 		return value;
 	}
 
-	
 	// getter and setter
 	public HttpConnection getConnection() {
 		return connection;

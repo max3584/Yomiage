@@ -142,20 +142,25 @@ public class Initialized {
 
 			es.shutdown();
 			try {
-				es.awaitTermination(30, TimeUnit.SECONDS);
+				es.awaitTermination(30, TimeUnit.MINUTES);
 			} catch (InterruptedException err) {
 				err.printStackTrace();
 			}
-
+			es = Executors.newFixedThreadPool(4);
 			RequestTime rt = new RequestTime();
 			// どれだけのファイル数があるかを表示
 			int row = frt.size();
 			System.out.print(String.format("\n\nMaxPage:%s\n", row));
+			es.execute(() -> {
+				while (true) {
+					System.out.print(String.format("%s\r", rt.request(System.currentTimeMillis())));
+				}
+			}); 
 			// ＳＱＬを実行しながら、進捗を表示
 			for (int i = 0; i < row; i++)
 				for (int j = 0; j < frt.get(i).getSqls().size(); j++) {
 
-					System.out.print("ＳＱＬを実行中ですしばらくお待ちください\t\t\t\t\t\t\t\t\r");
+					System.out.print(String.format("%s\t\tＳＱＬを実行中ですしばらくお待ちください\t\t\t\t\t\t\r", rt.request(System.currentTimeMillis())));
 					// sql execution (1ファイルごとの実行)
 					int num = this.db.UpdateSQLExecute(frt.get(i).getSqls().get(j));
 					if (num > -1) {
@@ -187,6 +192,11 @@ public class Initialized {
 						System.out.print("\t\t\t\t 差分データ挿入完了\t\t\t\t\t\n");
 					}
 				}
+			es.shutdown();
+			try {
+				es.awaitTermination(1, TimeUnit.SECONDS);
+			} catch (InterruptedException err) {
+			}
 			System.out.println(
 					String.format("\n処理終了\nかかった時間は [%s]です", rt.request(System.currentTimeMillis())));
 			this.db.close();

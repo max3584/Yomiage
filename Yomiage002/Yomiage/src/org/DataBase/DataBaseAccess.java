@@ -33,9 +33,7 @@ public interface DataBaseAccess {
 	public int UpdateSQLExecute(String sql) throws SQLException;
 
 	/**
-	 * <p>
 	 * データベースを閉じるためのメソッド
-	 * </p>
 	 */
 	public void close();
 

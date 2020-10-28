@@ -80,7 +80,6 @@ public class FileRead {
 				}
 			}
 		} catch (InterruptedException e) {
-			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
 		}
 		this.br.close();

@@ -37,6 +37,15 @@ public class CalcDate {
 		this(date);
 		this.sdf = sdf;
 	}
+	
+	public CalcDate(int year, int month, int day, int hour, int min, int sec) {
+		this.year = year;
+		this.month = month;
+		this.day = day;
+		this.hour = hour;
+		this.min = min;
+		this.sec = sec;
+	}
 
 	// CalcDays(Month)
 	public int CalcDay(int Month) {
@@ -87,9 +96,10 @@ public class CalcDate {
 	// month calcs
 	public void prevMonth(int num) {
 		this.month -= num;
-		if (this.month < 0) {
-			this.prevYear(Math.abs(this.month));
-			this.month = Math.abs(this.month) % 12;
+		if (this.month <= 0) {
+			int mon = this.month == 0? 1 : Math.abs(this.month);
+			this.prevYear(mon / 12 > 0? (mon / 12) : 1);
+			this.month += 12 ;
 		}
 	}
 
@@ -138,7 +148,7 @@ public class CalcDate {
 	}
 
 	// gettear and setter
-	public Date getDate() {
+	public Date getDateClass() {
 		return date;
 	}
 

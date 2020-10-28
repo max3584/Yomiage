@@ -13,9 +13,8 @@ import org.CLI.CEExpress;
 /**
  * データベースを使用するためのクラス
  * 
- * <p><small>
- * <a href="https://www.sqlite.org/copyright.html">copyright https://www.sqlite.org/copyright.html</a>
- * </small></p> 
+ * https://www.sqlite.org/copyright.html">copyright https://www.sqlite.org/copyright.html
+ * 
  * (public domain)
  * 
  *@param st				Statement Class

@@ -25,8 +25,8 @@ public class CEExpress implements ConsoleExecution {
 		this.pb = new ProcessBuilder(args);
 	}
 
-	public void ConsoleCommand(String port, String msg) {
-		this.pb = new ProcessBuilder(this.initCommand, port, msg);
+	public void ConsoleCommand(int port, String msg) {
+		this.pb = new ProcessBuilder(this.initCommand, String.valueOf(port), msg);
 
 		try {
 			if (this.pb.inheritIO().start().waitFor() != 0) {

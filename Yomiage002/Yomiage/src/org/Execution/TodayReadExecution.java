@@ -21,7 +21,6 @@ import org.DataBase.NetworkDocumentDatabase;
 import org.DataBase.NoSQLDocumentFormatXml;
 import org.Datas.DataLists;
 import org.Date.CalcDate;
-import org.Encode.Sanitization;
 import org.Readers.FileRead;
 import org.Readers.Directory.DirectoryUseSearch;
 import org.xml.sax.SAXException;
@@ -100,6 +99,9 @@ public class TodayReadExecution {
 		try {
 			// inits
 			boolean flg = true;
+			
+			//now date
+			CalcDate now = new CalcDate(new Date());
 
 			// 読み上げない文字列を消すための領域
 			// la
@@ -144,8 +146,6 @@ public class TodayReadExecution {
 
 			String holdFile = ".\\ExtendFiles\\hold.txt";
 
-			cd.prevDay(1);
-			
 			date = cd.getCalcData();
 			// directoryを入れる
 			try {
@@ -188,119 +188,138 @@ public class TodayReadExecution {
 			// スレッド処理終了
 			thread_loop.shutdown();
 			do {
-				// fileData読込み
-				fr = new FileRead(dir, StandardCharsets.UTF_16LE);
-				// 一時保存領域
-				tmp = fr.formatRead(6);
 
-				// 読み取り機構
-				// natuData = tmp.get(tmp.size() - 1);
+				if (dir.indexOf("hold") > -1) {
+					// 翌日7時までは前のテキストデータを使うためそのための処理
+					if (new CalcDate(new Date()).getDay() != cd.getDay() & cd.getHour() >= 7
+							& cd.getHour() < 24) {
+						cd.nextDay(1);
+					}
+					date = cd.getCalcData();
+					// directoryを入れる
+					try {
+						dir = dus.search(String.format("%s\\ChatLog%s_00.txt", psoLogFileDir, date));
+						if (setup.isLogPreview()) {
+							System.out.print(String.format("Path: %s", dir));
+						}
+					} catch (FileNotFoundException e) {
+						dir = dus.search(holdFile);
+					}
+				} else {
+					// fileData読込み
+					fr = new FileRead(dir, StandardCharsets.UTF_16LE);
+					// 一時保存領域
+					tmp = fr.formatRead(6);
 
-				// プロパティの値
-				properties = setup.getProperties().replaceAll("\\s", "").split(",");
-				// 読み上げする前の前処理
-				if (tmp.size() > prevSize) {
+					// 読み取り機構
+					// natuData = tmp.get(tmp.size() - 1);
 
-					// 読上げ判定式用
-					boolean request = false;
-					// 旧の判定式(番号ごとに変えるように変更した)
-					// request = Arrays.asList(properties).indexOf(natuData.getGroup()) > -1;
+					// プロパティの値
+					properties = setup.getProperties().replaceAll("\\s", "").split(",");
+					// 読み上げする前の前処理
+					if (tmp.size() > prevSize) {
 
-					// 一度取得したものに大して、最新のデータまでを読み込む
-					for (int prev = tmp.size() - prevSize; prev > 0; prev--) {
-						// 現在のカーソル位置でグループ設定的にあっているかの比較式
-						request = Arrays.asList(properties)
-								.indexOf(tmp.get(tmp.size() - prev).getGroup()) > -1;
-						// 棒読みに送るための処理を記述
-						if (properties[0].equals("any") | request) {
-							// System.out.println("1対象");
-							// ユーザー名の確保
-							String user = tmp.get(tmp.size() - prev).getUser().replaceAll(sanitiza,
-									"\'");
+						// 読上げ判定式用
+						boolean request = false;
+						// 旧の判定式(番号ごとに変えるように変更した)
+						// request = Arrays.asList(properties).indexOf(natuData.getGroup()) > -1;
 
-							// 正規表現で読まれないものを指定した後のものを格納
-							String comment = tmp.get(tmp.size() - prev).getComment()
-									.replaceAll(regex1, "").replaceAll(regex2, "")
-									.replaceAll(regex3, "").replaceAll(regex4, "")
-									.replaceAll(regex5, "").replaceAll(regex6, "")
-									.replaceAll(regex8, "").replaceAll(regex9, "")
-									.replaceAll(sanitiza, "\'");
+						// 一度取得したものに大して、最新のデータまでを読み込む
+						for (int prev = tmp.size() - prevSize; prev > 0; prev--) {
+							// 現在のカーソル位置でグループ設定的にあっているかの比較式
+							request = Arrays.asList(properties)
+									.indexOf(tmp.get(tmp.size() - prev).getGroup()) > -1;
+							// 棒読みに送るための処理を記述
+							if (properties[0].equals("any") | request) {
+								// System.out.println("1対象");
+								// ユーザー名の確保
+								String user = tmp.get(tmp.size() - prev).getUser()
+										.replaceAll(sanitiza, "\'");
 
-							// ＤＢとの比較用変数
-							String checking = tmp.get(tmp.size() - prev).getComment()
-									.replaceAll(sanitiza, "\'");
+								// 正規表現で読まれないものを指定した後のものを格納
+								String comment = tmp.get(tmp.size() - prev).getComment()
+										.replaceAll(regex1, "").replaceAll(regex2, "")
+										.replaceAll(regex3, "").replaceAll(regex4, "")
+										.replaceAll(regex5, "").replaceAll(regex6, "")
+										.replaceAll(regex8, "").replaceAll(regex9, "")
+										.replaceAll(sanitiza, "\'");
 
-							if (setup.isLogPreview()) {
-								// print preview
-								System.out.println(String.format("\ntmp_Size: %d\tprevSize: %d",
-										tmp.size(), prevSize));
-								System.out.println(
-										String.format("user: %s\t comment: %s\tnum:%d",
-												user, checking, prev));
-							}
-							// 読上げ例外処理
-							if (!comment.equals("") & Reference.indexOf(checking) == -1
-									& EReference.indexOf(checking) == -1) {
-								// console execute
-								// to C Packet Request Execute
-								// portnumber, comment
-								if (commentgenerater) {
-									String[] key = { "handle", "no", "owner", "service",
-											"time" };
-									String[] value = { user, "0", "0", "PSO2",
-											String.valueOf(System.currentTimeMillis()
-													/ 1000) };
+								// ＤＢとの比較用変数
+								String checking = tmp.get(tmp.size() - prev).getComment()
+										.replaceAll(sanitiza, "\'");
 
-									dd.addNode(((DocumentDatabase) dd).getDocument()
-											.createElement("comment"), key, value,
-											comment);
-
+								if (setup.isLogPreview()) {
+									// print preview
+									System.out.println(String.format(
+											"\ntmp_Size: %d\tprevSize: %d", tmp.size(),
+											prevSize));
+									System.out.println(String.format(
+											"user: %s\t comment: %s\tnum:%d", user,
+											checking, prev));
 								}
-								cee.ConsoleCommand(String.valueOf(portNumber),
-										String.format("\"%s: %s\"", user, comment));
+								// 読上げ例外処理
+								if (!comment.equals("") & Reference.indexOf(checking) == -1
+										& EReference.indexOf(checking) == -1) {
+									// console execute
+									// to C Packet Request Execute
+									// portnumber, comment
+									if (commentgenerater) {
+										String[] key = { "handle", "no", "owner",
+												"service", "time" };
+										String[] value = { user, "0", "0", "PSO2", String
+												.valueOf(System.currentTimeMillis()
+														/ 1000) };
+
+										dd.addNode(((DocumentDatabase) dd).getDocument()
+												.createElement("comment"), key,
+												value, comment);
+
+									}
+									cee.ConsoleCommand(portNumber, String
+											.format("\"%s: %s\"", user, comment));
+								}
 							}
 						}
-					}
-					// △△△△△△△△△△△△△ Loop end △△△△△△△△△△△△△△
-					// Database統計
-					ai.DatabaseUpdate(tmp);
+						// △△△△△△△△△△△△△ Loop end △△△△△△△△△△△△△△
+						// Database統計
+						ai.DatabaseUpdate(tmp);
 
-					// 再度、入れる
-					thread_loop = Executors.newFixedThreadPool(ai.getReferenceData().size() > 0
-							? (int) Math.sqrt(ai.getReferenceData().size())
-							: 1);
+						// 再度、入れる
+						thread_loop = Executors.newFixedThreadPool(ai.getReferenceData().size() > 0
+								? (int) Math.sqrt(ai.getReferenceData().size())
+								: 1);
 
-					// 統計データ更新
-					for (int i = 0; i < ai.getReferenceData().size(); i++) {
-						int num = i;
-						thread_loop.execute(() -> {
-							Reference.add(String.format("%s",
-									ai.getReferenceData().get(num).getComment()));
-						});
-					}
+						// 統計データ更新
+						for (int i = 0; i < ai.getReferenceData().size(); i++) {
+							int num = i;
+							thread_loop.execute(() -> {
+								Reference.add(String.format("%s",
+										ai.getReferenceData().get(num).getComment()));
+							});
+						}
 
-					// 自己定義されたデータ参照
-					for (int i = 0; i < ai.getERData().size(); i++) {
-						int num = i;
-						thread_loop.execute(() -> {
-							if (ai.getERData().get(num).isFlg() == 0)
-								EReference.add(String.format("%s,%d",
-										ai.getERData().get(num).getComment(),
-										ai.getERData().get(num).getPriority()));
-						});
-					}
-					// スレッド処理終了
-					thread_loop.shutdown();
-					try {
-						thread_loop.awaitTermination(30, TimeUnit.SECONDS);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
+						// 自己定義されたデータ参照
+						for (int i = 0; i < ai.getERData().size(); i++) {
+							int num = i;
+							thread_loop.execute(() -> {
+								if (ai.getERData().get(num).isFlg() == 0)
+									EReference.add(String.format("%s,%d",
+											ai.getERData().get(num).getComment(),
+											ai.getERData().get(num).getPriority()));
+							});
+						}
+						// スレッド処理終了
+						thread_loop.shutdown();
+						try {
+							thread_loop.awaitTermination(30, TimeUnit.SECONDS);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
 
-					// 過去データとなるようにすること
-					prevSize = tmp.size();
+						// 過去データとなるようにすること
+						prevSize = tmp.size();
+					}
 				}
-
 				// Date debug = new Date();
 				Thread.currentThread().sleep(200);
 				// debugs
@@ -321,23 +340,26 @@ public class TodayReadExecution {
 					// profile education
 					es.execute(setup);
 				}
-
+				boolean dayflg = false;
 				// 翌日7時までは前のテキストデータを使うためそのための処理
-				if (new CalcDate(new Date()).getDay() != cd.getDay() & cd.getHour() >= 7  & cd.getHour() < 24) {
-					
+				if (now.getDay() != cd.getDay() & cd.getHour() >= 7
+						& cd.getHour() < 24) {
+					dayflg = true;
 					cd.nextDay(1);
 				}
 				date = cd.getCalcData();
 				// directoryを入れる
 				try {
 					dir = dus.search(String.format("%s\\ChatLog%s_00.txt", psoLogFileDir, date));
-					if(setup.isLogPreview()) {
+					if (setup.isLogPreview() & dayflg) {
 						System.out.print(String.format("Path: %s \r", dir));
 					}
 				} catch (FileNotFoundException e) {
 					dir = dus.search(holdFile);
 				}
-
+				
+				//更新
+				now = new CalcDate(new Date());
 			} while (flg);
 			thread_loop.shutdown();
 		} catch (Exception e) {
