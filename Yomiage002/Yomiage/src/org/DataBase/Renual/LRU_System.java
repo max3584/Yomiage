@@ -19,11 +19,14 @@ public class LRU_System {
 	}
 	
 	public void addData(DataLists data) {
+		
+		
+		
 		this.tds.forEach(datalist -> {
 			if (datalist.getData().getComment().equals(data.getComment())) {
 				try {
 					DBAccess db = new DBAccess("JDBC:sqlite:.\\ExtendFiles\\Comment.db");
-					int db_flg = db.UpdateSQLExecute(String.format("insert into reference values ('%s');", data.getComment()));
+					db.UpdateSQLExecute(String.format("insert into reference values ('%s');", data.getComment()));
 					
 				} catch (IOException | InterruptedException e) {
 					

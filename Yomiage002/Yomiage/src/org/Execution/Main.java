@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -80,7 +81,9 @@ public class Main {
 		}
 
 		ExecutorService es = Executors.newFixedThreadPool(1);
-		LRU_System orgSys = new LRU_System();
+		ArrayList<LRU_System> orgSys = new ArrayList<LRU_System>();
+		orgSys.add(new LRU_System(5)); orgSys.add(new LRU_System(10));
+		orgSys.add(new LRU_System(15)); orgSys.add(new LRU_System(30));
 		FileRead fr = new FileRead(dir, StandardCharsets.UTF_16LE);
 		ArrayList<DataLists> tmp = fr.formatRead(6);
 		String[] properties = setup.getProperties().replaceAll("\\s", "").split(",");
@@ -98,13 +101,17 @@ public class Main {
 					request = Arrays.asList(properties).indexOf(tmp.get(tmp.size() - prev).getGroup()) > -1;
 					// 棒読みに送るための処理を記述
 					if (properties[0].equals("any") | request) {
-						orgSys.addData(tmp.get(prev));
+						int current = prev;
+						orgSys.forEach(lruSys -> lruSys.addData(tmp.get(current)));
 						
 						String user = tmp.get(prev).getUser();
 						String comment = tmp.get(prev).getComment();
 						if (!comment.equals("")) {
 							// 読み上げ対象の条件式
 							yomi.Request(portNumber, user, yomi.regexs(comment));
+							 if (setup.isLogPreview()) {
+								 System.out.println(String.format("%s : %s",user, comment));
+							 }
 						}
 					}
 				}
@@ -112,7 +119,7 @@ public class Main {
 
 				prevSize = tmp.size();
 			}
-			orgSys.Check();
+			orgSys.forEach(lruSys -> lruSys.Check());
 			
 			if (now.getDay() != today & now.getHour() > 7 | dir.equals(holdFile)) {
 				startDate = now;
@@ -135,5 +142,7 @@ public class Main {
 			}
 
 		} while (!setup.getProperties().equals("exit"));
+		es.shutdown();
+		es.awaitTermination(300, TimeUnit.MILLISECONDS);
 	}
 }
