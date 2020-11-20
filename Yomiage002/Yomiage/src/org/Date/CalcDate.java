@@ -20,7 +20,6 @@ public class CalcDate {
 
 	// constructor1
 	public CalcDate(Date date) {
-		this.date = date;
 		this.sdf = new SimpleDateFormat("yyyy,MM,dd,kk,mm,ss");
 		String[] datas = sdf.format(date).split(",");
 		this.year = Integer.parseInt(datas[0]);

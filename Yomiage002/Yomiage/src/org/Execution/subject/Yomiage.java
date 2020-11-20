@@ -5,7 +5,7 @@ import org.CLI.CEExpress;
 public abstract class Yomiage {
 
 	private String[] regexs = {
-			"(^|\\s)/(f|m|c)?la\\s\\w*(\\ss\\d)?",	//la
+			"(^|\\s)/(f|m|c)*la\\s\\w*(\\ss\\d)?",	//la
 			"/(sr|s\\w*)?\\s[(r|l|R|C|L)+(\\w|\\W)*]+\\s?", //sr
 			"(^|\\s)/ci\\d+?((\\s(\\d+|nw|t\\d|s\\d+)){1,4})", //ci
 			 "/\\w+\\s*(on|off)\\s*\\d*\\s*", //on off

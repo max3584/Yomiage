@@ -105,6 +105,7 @@ public class easySetup implements Runnable {
 			this.ipf.getProperties().setProperty("Read", this.properties);
 			try {
 				this.ipf.getProperties().store(new FileOutputStream(this.ipf.getFileName()), "Yomiage Properties");
+				this.console.ConsoleCommand();
 			} catch (FileNotFoundException e) {
 				// TODO 自動生成された catch ブロック
 				e.printStackTrace();
@@ -129,7 +130,7 @@ public class easySetup implements Runnable {
 			
 		}
 
-		this.console.ConsoleCommand();
+		
 	}
 
 	/**
