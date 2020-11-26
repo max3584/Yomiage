@@ -25,23 +25,41 @@ import org.xml.sax.SAXException;
  * 
  * ドキュメント型データベース用
  * 
+ * ※中身自体はあんまり本人もよくわかっていない
  * @author max
- *
- * @param filePath FileClass
- * @param docBuild DocumentBuilderClass
- * @param element ElementClass
- * @param NodeList NodeListClass
  *
  */
 
 public class DocumentDatabase implements NoSQLDocumentFormatXml {
 
-	File filePath;
-	DocumentBuilder docBuild;
-	Document document;
-	Element element;
-	NodeList nodeList;
+	/**
+	 * ファイルまでのフルパス
+	 */
+	private File filePath;
+	/**
+	 * ドキュメント組み立て用
+	 */
+	private DocumentBuilder docBuild;
+	/**
+	 * ドキュメント管理
+	 */
+	private Document document;
+	/**
+	 * DOC編集管理
+	 */
+	private Element element;
+	/**
+	 * 要素内の付加情報
+	 */
+	private NodeList nodeList;
 	
+	/**
+	 * コンストラクタ(XMLを読み込むためのもの)
+	 * @param url フルパス
+	 * @throws ParserConfigurationException DOC編集ができない場合
+	 * @throws SAXException (発生しないためわからない)
+	 * @throws IOException 読み書きが実行できない場合
+	 */
 	public DocumentDatabase(String url) throws ParserConfigurationException, SAXException, IOException {
 		this.filePath = new File(url);
 		this.docBuild = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -85,8 +103,9 @@ public class DocumentDatabase implements NoSQLDocumentFormatXml {
 		return true;
 	}
 	
-	/*
-	 *  ノードを取得する場合に使用
+	/**
+	 *  ノード名を取得
+	 *  @return ノード名
 	 */
 	public String[] getNodeNames() {
 		ArrayList<String> list = new ArrayList<String>();
@@ -100,8 +119,9 @@ public class DocumentDatabase implements NoSQLDocumentFormatXml {
 		return (String[])list.toArray();
 	}
 	
-	/*
+	/**
 	 * ノードと値を取得
+	 * @return ノード
 	 */
 	public HashMap<String, String> getNodes() {
 		HashMap<String, String> nodes = new HashMap<String, String>();
@@ -118,7 +138,7 @@ public class DocumentDatabase implements NoSQLDocumentFormatXml {
 	/**
 	 * 探索法：線形探索法
 	 * ノードの値を取得
-	 * @param NodeName
+	 * @param NodeName　ノード名
 	 * @return ノードの場所にある値を取得します
 	 */
 	public String getValue(String NodeName) {

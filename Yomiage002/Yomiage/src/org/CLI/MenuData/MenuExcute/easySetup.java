@@ -15,42 +15,54 @@ import org.Request.UserRequest;
  *  (簡易ユーザインタフェースです)
  * 
  * @author max
- * 
- *        
- * @param propeties      プロファイル読込後のデータを保持するためのフィールド
- * @param dataInitialize 固定の入力値に対して固定の出力地にするような設定(final設定)
- * @param ipf            プロファイル読込、書込みを行うフィールド
- * @param ur             キーボード入力を実装と任意の文字列を表示後入力可能とするような設定が入っている
- * @param isExecution    並列実行するため、このクラスが実行可能かどうかを判定するためのフィールド
- * @param findText       画面に表示するテキストを保存するフィールド
- * @param console        コンソールコマンドを実行するための設定が入っている
  */
 
 public class easySetup implements Runnable {
-
-	// プロファイル
+	 
+	 /** 
+	  * プロファイル読込後のデータを保持するためのフィールド
+	  */
 	private String properties;
 
-	// データイニシャライズ
+	/**
+	 *  固定の入力値に対して固定の出力地にするような設定(final設定)
+	 */
 	private final String[][] dataInitialize = { { "all", "public", "party", "private", "team", "group", "none" },
 			{ "any", "PUBLIC", "PARTY", "REPLY", "GUILD", "GROUP", "NONE" } };
 
-	// プロファイルが存在するかどうか
+	/**
+	 *  プロファイル読込、書込みを行うフィールド
+	 */
 	private InitPropertiesFile ipf;
 
-	// ユーザ入力用
+	/**
+	 *  キーボード入力を実装と任意の文字列を表示後入力可能とするような設定が入っている
+	 */
 	private UserRequest ur;
 
-	// 実行可能設定
+	/**
+	 *  並列実行するため、このクラスが実行可能かどうかを判定するためのフィールド
+	 */
 	private boolean isExecution;
 	
-	// ログ表記用の設定
+	/**
+	 * ログを表示するかの判定変数
+	 */
 	private boolean isLogPreview;
-	// find text
+	
+	/**
+	 *  画面に表示するテキストを保存するフィールド
+	 */
 	private String findText;
-
+	
+	/**
+	 * コンソールコマンドを実行するための設定が入っている
+	 */
 	private CEExpress console;
-
+	
+	/**
+	 * コンストラクタ
+	 */
 	public easySetup() {
 		this.ur = new UserRequest();
 		this.ipf = new InitPropertiesFile(".\\ExtendFiles\\Yomiage.properties");
@@ -64,6 +76,9 @@ public class easySetup implements Runnable {
 		this.console = new CEExpress("cmd", "/c", "cls");
 	}
 
+	/**
+	 * 画面のメイン処理
+	 */
 	@Override
 	public void run() {
 		if (this.getExcution()) {
@@ -161,66 +176,130 @@ public class easySetup implements Runnable {
 	}
 
 	// getter and setter
+	/**
+	 * プロパティ値取得
+	 * @return　プロパティの値
+	 */
 	public String getProperties() {
 		return this.properties;
 	}
 
+	/**
+	 * 実行可否取得
+	 * @return　実行可否
+	 */
 	public boolean getExcution() {
 		return this.isExecution;
 	}
 
+	/**
+	 * 実行可否設定
+	 * @param flg 実行できる場合はtrue実行できない場合はfalse
+	 */
 	public void setExecution(boolean flg) {
 		this.isExecution = flg;
 	}
 
+	/**
+	 * プロパティセットアップ用(取得)
+	 * @return　プロパティファイルクラス
+	 */
 	public InitPropertiesFile getIpf() {
 		return ipf;
 	}
 
+	/**
+	 * プロパティセットアップ用(設定)
+	 * @param ipf　プロパティファイル構成
+	 */
 	public void setIpf(InitPropertiesFile ipf) {
 		this.ipf = ipf;
 	}
 
+	/**
+	 * ユーザ入力クラス取得
+	 * @return ユーザー入力用クラス
+	 */
 	public UserRequest getUr() {
 		return ur;
 	}
 
+	/**
+	 * ユーザ入力クラス設定
+	 * @param ur　ユーザ入力クラスの設定情報
+	 */
 	public void setUr(UserRequest ur) {
 		this.ur = ur;
 	}
 
+	/**
+	 * 固定テキストの文字を取得
+	 * @return　固定テキスト
+	 */
 	public String getFindText() {
 		return findText;
 	}
 
+	/**
+	 * 固定テキスト文字の設定
+	 * @param findText 固定テキスト
+	 */
 	public void setFindText(String findText) {
 		this.findText = findText;
 	}
 
+	/**
+	 * ＯＳコマンド関連のクラス取得
+	 * @return OSコマンド実行クラス
+	 */
 	public CEExpress getConsole() {
 		return console;
 	}
 
+	/**
+	 * OSコマンド関連クラスの設定
+	 * @param console OSコマンド実行クラス
+	 */
 	public void setConsole(CEExpress console) {
 		this.console = console;
 	}
 
+	/**
+	 * 自己定義パラメータ取得
+	 * @return 自己定義パラメータ
+	 */
 	public String[][] getDataInitialize() {
 		return dataInitialize;
 	}
 
+	/**
+	 * 実行可否取得
+	 * @return 実行可否
+	 */
 	public boolean isExecution() {
 		return isExecution;
 	}
 
+	/**
+	 * 現在の設定
+	 * @param properties　設定情報
+	 */
 	public void setProperties(String properties) {
 		this.properties = properties;
 	}
 
+	/**
+	 * ログを表示可否
+	 * @return 表示可否
+	 */
 	public boolean isLogPreview() {
 		return isLogPreview;
 	}
 
+	/**
+	 * ログ表示可否設定
+	 * @param isLogPreview　ログ表示可の場合はtrue負荷の場合はfalse
+	 */
 	public void setLogPreview(boolean isLogPreview) {
 		this.isLogPreview = isLogPreview;
 	}

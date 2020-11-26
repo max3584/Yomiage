@@ -13,35 +13,45 @@ import org.CLI.CEExpress;
 /**
  * データベースを使用するためのクラス
  * 
- * https://www.sqlite.org/copyright.html">copyright https://www.sqlite.org/copyright.html
+ * <a href="https://www.sqlite.org/copyright.html">copyright https://www.sqlite.org/copyright.html</a>
  * 
  * (public domain)
- * 
- *@param st				Statement Class
- *@param con				Connection Class
- *@param database			Class
- *@param debugflg			デバッグ表示を行うか行わないか
- *@param sqlite 			SQLiteクラスを格納するためのフィールド(引用)
+ * @author max
  */
 public class DBAccess implements DataBaseAccess {
 
 	// inits
+	/**
+	 * SQL情報などを処理するときに使用
+	 */
 	private Statement st;
+	/**
+	 * データベースに接続時に使用
+	 */
 	private Connection con;
+	/**
+	 * クラス情報
+	 */
 	private Class<?> database;
 
 	// debug init
-
+	/**
+	 * デバッグ表示を行うか行わないか
+	 */
 	private final boolean debugflg = false;
 
+	/**
+	 * SQLiteクラスを格納するためのフィールド(引用)
+	 */
 	private Class<?> sqlite;
 
 	/**
 	 * 
 	 * DBへアクセスするためのコンストラクタ
 	 * 
-	 * @param className org.[DataBaseName].JDBC の書式で書くと処理できます
 	 * @param url       jdbc:[DataBaseName].URL の書式で書くと処理できます
+	 * @exception IOException 読み書きができない場合に発生
+	 * @exception InterruptedException (このソフトウェアでは発生しない)
 	 */
 
 	public DBAccess(String url) throws IOException, InterruptedException {

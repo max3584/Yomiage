@@ -8,18 +8,39 @@ import org.Request.UserRequest;
 import org.Readers.Directory.Files;
 import org.Readers.Directory.Folders;
 
+/**
+ * ディレクトリが存在するかどうかのチェックを行ったり正当性の確認を行うためのクラス
+ * @author max
+ *
+ */
 public class DirectoryUseSearch implements Directory {
 
+	/**
+	 *  ディレクトリを保存するための変数
+	 */
 	private File dir;
-
+	/**
+	 *  ファイル名のリスト
+	 */
 	private ArrayList<Files> files;
+	/**
+	 *  フォルダ名のリスト
+	 */
 	private ArrayList<Folders> folders;
 
+	/**
+	 * 引数なしコンストラクタ
+	 * フィールドの初期設定のみ
+	 */
 	public DirectoryUseSearch() {
 		this.files = new ArrayList<Files>();
 		this.folders = new ArrayList<Folders>();
 	}
 
+	/**
+	 * 通常使用するコンストラクタ
+	 * @param dir フォルダディレクトリ
+	 */
 	public DirectoryUseSearch(String dir) {
 		this();
 		this.dir = new File(dir);
@@ -79,7 +100,7 @@ public class DirectoryUseSearch implements Directory {
 		// 一覧を出力
 		for (File list : this.dir.listFiles()) {
 			String msg = list.getName();
-			System.out.println((list.isFile() ? new Files().getMsg() : new Folders().getMsg()) + msg);
+			System.out.println(list.isFile() ? Files.msg : Folders.msg + msg);
 		}
 
 		// ユーザー入力でディレクトリのフルパスを取る
@@ -114,7 +135,7 @@ public class DirectoryUseSearch implements Directory {
 				for (File list : this.dir.listFiles()) {
 					if(list.getName().contains(use)) {
 						String msg = list.getName();
-						System.out.println((list.isFile() ? new Files().getMsg() : new Folders().getMsg()) + msg);
+						System.out.println(list.isFile() ? Files.msg : Folders.msg + msg);
 						msgflg = (msg.equals(""))? false: true;
 					}
 				}
@@ -131,7 +152,7 @@ public class DirectoryUseSearch implements Directory {
 			// 一覧を出力
 			for (File list : this.dir.listFiles()) {
 				String msg = list.getName();
-				System.out.println((list.isFile() ? new Files().getMsg() : new Folders().getMsg()) + msg);
+				System.out.println(list.isFile() ? Files.msg : Folders.msg + msg);
 			}
 
 		} while (flg);
@@ -170,30 +191,58 @@ public class DirectoryUseSearch implements Directory {
 	}
 
 	// getter and setter
+	/**
+	 * ディレクトリ取得
+	 * @return ディレクトリ
+	 */
 	public File getDir() {
 		return dir;
 	}
 
+	/**
+	 * ディレクトリ設定
+	 * @param dir ディレクトリ
+	 */
 	public void setDir(File dir) {
 		this.dir = dir;
 	}
 
+	/**
+	 * ディレクトリ設定
+	 * @param dir ディレクトリ(文字列)
+	 */
 	public void setDir(String dir) {
 		this.dir = new File(dir);
 	}
 
+	/**
+	 * ファイルリスト取得
+	 * @return ファイルリスト
+	 */
 	public ArrayList<Files> getFiles() {
 		return files;
 	}
 
+	/**
+	 * ファイルリスト設定
+	 * @param files ファイルリスト
+	 */
 	public void setFiles(ArrayList<Files> files) {
 		this.files = files;
 	}
 
+	/**
+	 * フォルダーリスト取得
+	 * @return フォルダーリスト
+	 */
 	public ArrayList<Folders> getFolders() {
 		return folders;
 	}
 
+	/**
+	 * フォルダーリスト設定
+	 * @param folders フォルダーリスト
+	 */
 	public void setFolders(ArrayList<Folders> folders) {
 		this.folders = folders;
 	}

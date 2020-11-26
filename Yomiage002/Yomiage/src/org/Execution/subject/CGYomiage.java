@@ -3,11 +3,22 @@ package org.Execution.subject;
 import org.CLI.CEExpress;
 import org.DataBase.DocumentDatabase;
 import org.DataBase.NoSQLDocumentFormatXml;
-
+/**
+ * コメントジェネレータの設定が含まれている読上げ転送用クラス
+ * @author max
+ *
+ */
 public class CGYomiage extends Yomiage {
 
+	/**
+	 * XMLを編集するためのフィールド
+	 */
 	private NoSQLDocumentFormatXml xml;
 
+	/**
+	 * コンストラクタ
+	 * @param xml コメントジェネレータの設定ファイルを指定
+	 */
 	public CGYomiage(NoSQLDocumentFormatXml xml) {
 		this.xml = xml;
 	}

@@ -1,4 +1,4 @@
-package org.Readers;
+package old.Readers;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,69 +12,36 @@ import org.Datas.DataLists;
 import org.Datas.TabDatas;
 import org.Readers.Directory.DirectoryUseSearch;
 
-/**
- * ファイル読み込みに使用するためのクラス
- * @author max
- *
- */
 public class FileRead {
 	
-	/**
-	 *  ディレクトリ保存用
-	 */
+	// ディレクトリ保存用
 	private File dir;
-	/**
-	 * メインで使用するファイル読み込み
-	 */
+	//メインで使用するファイル読み込み
 	private BufferedReader br;
 	
-	/**
-	 * コンストラクタ
-	 * @param dir ディレクトリの指定されたファイルクラス
-	 * @param fileName ファイル名の指定
-	 * @param encode ファイルのエンコード指定
-	 * @exception IOException 存在しないフォルダやファイルを指定した場合に発生します
-	 */
+	//コンストラクタ
 	public FileRead(File dir, String fileName, Charset encode) throws IOException {
 		this.dir = new File(dir.getPath() + "\\" + fileName);
 		this.br = Files.newBufferedReader(this.dir.toPath(),  encode);
 	}
 	
-	/**
-	 *  コンストラクタ２
-	 * @param dir ファイルまでのフルパスが設定されたファイルクラス
-	 * @param encode ファイルのエンコード指定
-	 * @exception IOException フルパス取得時に存在しないものがある場合発生します
-	 */
+	// コンストラクタ２
 	public FileRead(File dir, Charset encode) throws IOException {
 		this.dir = dir;
 		this.br = Files.newBufferedReader(this.dir.toPath(),  encode);
 	}
 	
-	/**
-	 * コンストラクタ
-	 * @param dir フルパスの文字列
-	 * @param encode ファイルのエンコード指定
-	 * @exception IOException 存在しない場合発生します
-	 */
+	// @Overload
 	public FileRead(String dir, Charset encode) throws IOException {
 		this(new File(dir),  encode);
 	}
 	
-	/**
-	 * 引数なしコンストラクタ
-	 */
+	//引数なしコンストラクタ
 	public FileRead() {
 		this.dir = null;
 		this.br = null;
 	}
 	
-	/**
-	 * ファイル読み込み関数
-	 * @return 中身のデータを1行ごとにリストとして取得
-	 * @exception IOException ファイルが読み込み専用などアクセスができない場合に発生します
-	 * @exception InterruptedException スレッドしょりうんぬン・・・((発生することはまずない
-	 */
 	public ArrayList<String> Reads() throws IOException, InterruptedException {
 		if (this.dir.equals(null)) {
 			return WhatRead();
@@ -88,12 +55,6 @@ public class FileRead {
 		return result;
 	}
 	
-	/**
-	 * 項目数で取得する場合に使用します
-	 * @param col 項目数
-	 * @return 項目ごとのデータのリスト
-	 * @exception IOException アクセスができないまたは存在しない場合に発生します。
-	 */
 	public ArrayList<DataLists> formatRead(int col) throws IOException {
 		if(this.dir.equals(null)) {
 			new IOException("ディレクトリに何も入っていないため");
@@ -126,13 +87,6 @@ public class FileRead {
 		
 	}
 	
-	/**
-	 * ユーザがCLIベースでファイル検索を行うようなメソッド
-	 * @return ファイルの中身を1行ごとにリスト化したもの
-	 * @exception FileNotFoundException ファイルが存在しない場合に発生
-	 * @exception IOException ファイルが読み込めない場合に発生
-	 * @exception InterruptedException スレッド処理うんぬん・・・((発生することはまずない
-	 */
 	public ArrayList<String> WhatRead() throws FileNotFoundException, IOException, InterruptedException{
 		
 		DirectoryUseSearch dus = new DirectoryUseSearch();

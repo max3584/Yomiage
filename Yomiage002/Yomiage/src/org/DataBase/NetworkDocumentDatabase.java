@@ -22,14 +22,43 @@ import org.xml.sax.SAXException;
 
 import old.SocketConnect.HttpConnection;
 
+/**
+ * ネットワーク接続でドキュメント型のデータベースを取得書き込みをするためのクラス
+ * @author max
+ *
+ */
 public class NetworkDocumentDatabase implements NoSQLDocumentFormatXml {
 
+	/**
+	 * HTTP接続用
+	 */
 	HttpConnection connection;
+	/**
+	 * ドキュメントを組み立てるためのもの
+	 */
 	DocumentBuilder docBuild;
+	/**
+	 * ドキュメント管理用
+	 */
 	Document document;
+	/**
+	 * DOC編集管理
+	 */
 	Element element;
+	/**
+	 * 要素内のパラメータデータ
+	 */
 	NodeList nodeList;
 	
+	/**
+	 * コンストラクタ
+	 * 初期設定
+	 * @param url　ネットワークのデータベース位置のＦＱＤＮ
+	 * @param option HTTPメソッド
+	 * @exception ParserConfigurationException (このソフトウェアで発生しないのでわかりません)
+	 * @exception SAXException (このソフトウェアで発生しないのでわかりません)
+	 * @exception IOException 取得書き込みが不可能な場合発生
+	 */
 	public NetworkDocumentDatabase(String url, String option) throws ParserConfigurationException, SAXException, IOException {
 		
 		this.connection = new HttpConnection(url, option);

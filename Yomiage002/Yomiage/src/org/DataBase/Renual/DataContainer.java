@@ -7,10 +7,22 @@ import java.util.ArrayList;
 
 import org.DataBase.DBAccess;
 
+/**
+ * 分析されたデータから規定値を超えたものをデータベースに入れるためのクラス
+ * @author max
+ *
+ */
 public class DataContainer {
 
+	/**
+	 * データベースクラス
+	 */
 	private DBAccess db;
 	
+	/**
+	 * 引数なしコンストラクタ
+	 * データベースコネクション確立設定
+	 */
 	public DataContainer() {
 		
 		try {
@@ -24,6 +36,12 @@ public class DataContainer {
 		}
 	}
 	
+	/**
+	 * データベース内のデータを再取得するための関数
+	 * @param sql クエリ
+	 * @return データベースのレコードのリスト
+	 * @exception SQLException SQLが実行できない場合に発生
+	 */
 	public ArrayList<String> update(String sql) throws SQLException {
 		var data = new ArrayList<String>();
 		ResultSet result = this.db.SearchSQLExecute(sql);
@@ -33,6 +51,10 @@ public class DataContainer {
 		return data;
 	}
 	
+	/**
+	 * データベースを閉じる場合に使用する関数
+	 * ※必ず最後に実行するようにする
+	 */
 	public void Close() {
 		this.db.close();
 	}

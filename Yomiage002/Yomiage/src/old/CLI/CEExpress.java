@@ -1,44 +1,30 @@
-package org.CLI;
+package old.CLI;
 
 import java.io.IOException;
 
 /**
  * 
  * 現在使用している受け渡しクラス
- * @author max
+ * 
+ * @param	initCommand			初期コマンドが入っているフィールド
+ * @param pb						コマンドプロンプトを実行するためのクラス
+ * 
  */
 
 public class CEExpress implements ConsoleExecution {
 
-	/**
-	 * 初期コマンドが入っているフィールド
-	 */
 	private String initCommand;
-	/**
-	 * コマンドプロンプトを実行するためのクラス
-	 */
 	private ProcessBuilder pb;
 
-	/**
-	 * クラス固有の定義(読み上げソフトウェアに転送するための実行ファイル呼び出し設定)
-	 */
+	// constructer
 	public CEExpress() {
 		this.initCommand = ".\\ExtendFiles\\YomiageCPR.exe";
 	}
-	
-	/**
-	 * 任意のOSコマンドを設定(管理実行権限は有していないことに注意)
-	 * @param args OSコマンドを実行するための設定
-	 */
+
 	public CEExpress(String... args) {
 		this.pb = new ProcessBuilder(args);
 	}
 
-	/**
-	 * 読み上げ転送用のプログラムに通信するためのもの
-	 * @param port ポート番号
-	 * @param msg 読み上げる内容
-	 */
 	public void ConsoleCommand(int port, String msg) {
 		this.pb = new ProcessBuilder(this.initCommand, String.valueOf(port), msg);
 

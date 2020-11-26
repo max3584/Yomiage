@@ -14,11 +14,11 @@ import java.util.concurrent.TimeUnit;
 import org.DataBase.DBAccess;
 import org.Datas.DataLists;
 import org.Date.CalcDate;
-import org.Readers.FileReadThred;
+import old.Readers.FileReadThred;
 import org.Readers.Directory.DirectoryUseSearch;
-import org.Request.DatabaseInsert;
+import old.Request.DatabaseInsert;
 import org.Request.InitPropertiesFile;
-import org.Request.RequestTime;
+import old.Request.RequestTime;
 import org.Request.UserRequest;
 
 /**
@@ -155,12 +155,13 @@ public class Initialized {
 				while (true) {
 					System.out.print(String.format("%s\r", rt.request(System.currentTimeMillis())));
 				}
-			}); 
+			});
 			// ＳＱＬを実行しながら、進捗を表示
 			for (int i = 0; i < row; i++)
 				for (int j = 0; j < frt.get(i).getSqls().size(); j++) {
 
-					System.out.print(String.format("%s\t\tＳＱＬを実行中ですしばらくお待ちください\t\t\t\t\t\t\r", rt.request(System.currentTimeMillis())));
+					System.out.print(String.format("%s\t\tＳＱＬを実行中ですしばらくお待ちください\t\t\t\t\t\t\r",
+							rt.request(System.currentTimeMillis())));
 					// sql execution (1ファイルごとの実行)
 					int num = this.db.UpdateSQLExecute(frt.get(i).getSqls().get(j));
 					if (num > -1) {
@@ -186,7 +187,8 @@ public class Initialized {
 									"%s\tPage:%d\tPagePercent:%s%%\tQueryLine:%s%%\tflg:%d \r",
 									rt.request(System.currentTimeMillis()), i + 1,
 									String.format("%s%3.2f", page < 10 ? "0" : "", page),
-									String.format("%s%3.2f", query < 10? "0" : "", query), num));
+									String.format("%s%3.2f", query < 10 ? "0" : "", query),
+									num));
 							count++;
 						}
 						System.out.print("\t\t\t\t 差分データ挿入完了\t\t\t\t\t\n");

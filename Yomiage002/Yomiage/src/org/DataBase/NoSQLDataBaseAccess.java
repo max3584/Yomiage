@@ -53,8 +53,8 @@ public interface NoSQLDataBaseAccess {
 	
 	/**
 	 *  StringReadMethod OverLoad
-	 *  @return String Datas
-	 * 
+	 * @param flg 読み込み可能かどうか
+	 * @return String Datas
 	 * @throws IOException 呼び出しエラー
 	 */
 	
@@ -71,8 +71,8 @@ public interface NoSQLDataBaseAccess {
 	
 	/**
 	 *  ReadMethod OverLoad
-	 *  @return int Datas
-	 * 
+	 * @param flg 読み込み可能かどうか
+	 * @return 数値データ
 	 * @throws IOException 呼び出しエラー
 	 */
 	

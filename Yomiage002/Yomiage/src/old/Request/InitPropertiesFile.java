@@ -1,4 +1,4 @@
-package org.Request;
+package old.Request;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -8,27 +8,28 @@ import java.text.SimpleDateFormat;
 import java.util.Properties;
 
 /**
+ * 
+ * @author max
  *
  * プロパティファイルを自動で生成または読み込みを行うクラスです。
  * プロパティファイルは主に読み込みのグループ分けや初期起動時なのかなどに使用します
  *
- *@author max
  */
 
 public class InitPropertiesFile {
 	
 	/**
-	 * プロパティファイルの名前を格納するためのフィールド
+	 * @param fileName		プロパティファイルの名前を格納するためのフィールド
 	 */
 	private String fileName;
 	 /**
-	  * プロパティファイルを操作するためのフィールド
+	  * @param properties		プロパティファイルを操作するためのフィールド
 	 */
 	private Properties properties;
 	
 	/**
 	 * プロパティファイル初期設定コンストラクタ
-	 * @param filename ファイル名
+	 * @param filename
 	 */
 	public InitPropertiesFile(String filename) {
 		this.fileName = filename;
@@ -56,8 +57,8 @@ public class InitPropertiesFile {
 	/**
 	 * プロパティの値を変更するための関数
 	 * @param value 変更する値
-	 * @exception FileNotFoundException プロパティファイルが存在しない場合に発生します
-	 * @exception IOException プロパティファイルが読み込み書き込みができない場合に発生します
+	 * @throws FileNotFoundException　プロパティファイルが存在しない場合に発生します
+	 * @throws IOException　プロパティファイルが読み込み書き込みができない場合に発生します
 	 */
 	public void Change(String value) throws FileNotFoundException, IOException {
 		this.properties.setProperty("Read", value);
@@ -67,7 +68,7 @@ public class InitPropertiesFile {
 	// getter and setter
 	/**
 	 * ファイル名取得
-	 * @return ファイル名
+	 * @return　ファイル名
 	 */
 	public String getFileName() {
 		return fileName;
@@ -75,7 +76,7 @@ public class InitPropertiesFile {
 
 	/**
 	 * ファイル名設定
-	 * @param fileName ファイル名
+	 * @param fileName　ファイル名
 	 */
 	public void setFileName(String fileName) {
 		this.fileName = fileName;

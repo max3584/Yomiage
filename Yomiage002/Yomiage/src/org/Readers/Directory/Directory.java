@@ -2,6 +2,11 @@ package org.Readers.Directory;
 
 import java.io.FileNotFoundException;
 
+/**
+ * ディレクトリを認知するためのインタフェース
+ * @author max
+ *
+ */
 public interface Directory {
 
 	/**
@@ -9,6 +14,7 @@ public interface Directory {
 	 * 
 	 * @param directory 決まったPATHが存在する場合に使用します
 	 * @return FullPathを返します。
+	 * @exception FileNotFoundException ファイルが存在しない場合に発生します
 	 */
 	
 	public String search(String directory) throws FileNotFoundException;

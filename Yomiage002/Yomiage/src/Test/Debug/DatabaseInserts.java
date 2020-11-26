@@ -8,9 +8,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.RejectedExecutionException;
 
 import org.DataBase.DBAccess;
-import org.Readers.FileReadThred;
+import old.Readers.FileReadThred;
 import org.Readers.Directory.DirectoryUseSearch;
-import org.Request.RequestTime;
+import old.Request.RequestTime;
 
 public class DatabaseInserts {
 

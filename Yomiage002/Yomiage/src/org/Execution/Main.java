@@ -24,11 +24,23 @@ import org.Datas.DataLists;
 import org.Date.CalcDate;
 import org.Execution.subject.*;
 import org.Readers.FileRead;
+import org.Readers.Directory.Directory;
 import org.Readers.Directory.DirectoryUseSearch;
 import org.xml.sax.SAXException;
 
+/**
+ * テキストを読上げソフトに転送するためのメインクラス
+ * @author max
+ *
+ */
 public class Main {
 
+	/**
+	 * 
+	 * @param args <dl><dt>index: 0</dt><dd>読上げ対象のパス</dd><dt>index: 1</dt><dd>ポート番号</dd><dt>index: 2</dt><dd>コメントジェネレータのファイルパスまたはURL</dd></dl>
+	 * @throws IOException 予期せぬ読み書きのエラーが出た場合発生
+	 * @throws InterruptedException 予期せぬエラーが発生した場合
+	 */
 	public static void main(String[] args) throws IOException, InterruptedException {
 		/*
 		 * 引数がちゃんとあるかを確認
@@ -42,7 +54,7 @@ public class Main {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		CalcDate startDate = new CalcDate(new Date(), sdf);
 		String dir = "";
-		DirectoryUseSearch dus = new DirectoryUseSearch();
+		Directory dus = new DirectoryUseSearch();
 		int prevSize = 0;
 		int today = startDate.getDay();
 
@@ -155,7 +167,7 @@ public class Main {
 			
 			//Thread.currentThread().sleep(200);
 			
-			if (now.getDay() != today & now.getHour() > 7 | dir.equals(holdFile)) {
+			if (now.getDay() != today & now.getHour() > 7 & now.getHour() < 24) {
 				setup.setLogPreview(true);
 				startDate = now;
 				today = now.getDay();

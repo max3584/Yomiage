@@ -4,6 +4,12 @@ import java.util.HashMap;
 
 import org.w3c.dom.Element;
 
+/**
+ * ドキュメント型のデータベースを取得するためのインタフェース
+ * ※XML用
+ * @author max
+ *
+ */
 public interface NoSQLDocumentFormatXml {
 
 	/**
@@ -31,7 +37,7 @@ public interface NoSQLDocumentFormatXml {
 	/**
 	 * 探索法：線形探索法
 	 * ノードの値を取得
-	 * @param NodeName
+	 * @param NodeName ノード名
 	 * @return ノードの場所にある値を取得します
 	 */
 	public String getValue(String NodeName);
