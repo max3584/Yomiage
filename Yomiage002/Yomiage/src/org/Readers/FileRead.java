@@ -8,7 +8,7 @@ import java.nio.file.Files;
 import java.io.BufferedReader;
 import java.util.ArrayList;
 
-import org.Datas.DataLists;
+import org.Datas.ChatData;
 import org.Datas.TabDatas;
 import org.Readers.Directory.DirectoryUseSearch;
 
@@ -94,18 +94,18 @@ public class FileRead {
 	 * @return 項目ごとのデータのリスト
 	 * @exception IOException アクセスができないまたは存在しない場合に発生します。
 	 */
-	public ArrayList<DataLists> formatRead(int col) throws IOException {
+	public ArrayList<ChatData> formatRead(int col) throws IOException {
 		if(this.dir.equals(null)) {
 			new IOException("ディレクトリに何も入っていないため");
 		}
 		
-		ArrayList<DataLists> result = new ArrayList<DataLists>();
+		ArrayList<ChatData> result = new ArrayList<ChatData>();
 		TabDatas td = new TabDatas();
 		try {
 			for(String line : this.Reads()) {
 				String[] dump = td.TabInsert(line);
 				if(dump.length == col) {
-					result.add(new DataLists(dump));
+					result.add(new ChatData(dump));
 				} else {
 					if("".equals(line)) {
 						continue;

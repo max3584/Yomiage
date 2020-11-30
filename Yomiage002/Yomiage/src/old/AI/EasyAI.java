@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.DataBase.DBAccess;
-import org.Datas.DataLists;
+import org.Datas.ChatData;
 import old.Request.DatabaseInsert;
 
 import old.Datas.ExceptionReferenceData;
@@ -81,7 +81,7 @@ public class EasyAI {
 	 * @throws InterruptedException	スレッドの割り込みが発生した場合スローされます
 	 * @throws SQLException			ＳＱＬが失敗した場合にスローされます
 	 */
-	public void DatabaseUpdate(ArrayList<DataLists> list) throws IOException, InterruptedException, SQLException {
+	public void DatabaseUpdate(ArrayList<ChatData> list) throws IOException, InterruptedException, SQLException {
 		this.db = new DBAccess(this.DatabaseName);
 		DatabaseInsert di = new DatabaseInsert();
 		for (int i = 0; i < list.size(); i++) {

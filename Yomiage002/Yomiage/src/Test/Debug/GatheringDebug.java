@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import org.DataBase.DBAccess;
-import org.Datas.DataLists;
+import org.Datas.ChatData;
 import org.Date.CalcDate;
 
 import old.Execution.Initialized;
@@ -23,9 +23,9 @@ public class GatheringDebug {
 		
 		ResultSet result = db.SearchSQLExecute("select * from Natu_data");
 		
-		ArrayList<DataLists> datalist = new ArrayList<DataLists>();
+		ArrayList<ChatData> datalist = new ArrayList<ChatData>();
 		while(result.next()) {
-			datalist.add(new DataLists(result.getString("tmstamp"), String.valueOf(result.getInt("number")), result.getString("groups"), result.getString("sirial"), result.getString("username"), result.getString("comments")));
+			datalist.add(new ChatData(result.getString("tmstamp"), String.valueOf(result.getInt("number")), result.getString("groups"), result.getString("sirial"), result.getString("username"), result.getString("comments")));
 		}
 		
 		System.out.println(datalist.get(0).getDate().substring(0, 15));

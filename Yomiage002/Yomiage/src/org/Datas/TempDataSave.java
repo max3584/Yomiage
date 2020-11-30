@@ -17,14 +17,14 @@ public class TempDataSave {
 	/**
 	 * コメント詳細データ
 	 */
-	private DataLists data;
+	private ChatData data;
 	
 	/**
 	 * コンストラクタ
 	 * コメントデータを入れるための初期設定
 	 * @param data コメント詳細データ
 	 */
-	public TempDataSave(DataLists data) {
+	public TempDataSave(ChatData data) {
 		this.setTimestamp(new CalcDate(new Date()));
 		this.setData(data);
 	}
@@ -33,7 +33,7 @@ public class TempDataSave {
 	 * コメント詳細データ取得
 	 * @return コメント詳細データ
 	 */
-	public DataLists getData() {
+	public ChatData getData() {
 		return data;
 	}
 
@@ -41,7 +41,7 @@ public class TempDataSave {
 	 * コメント詳細データ設定
 	 * @param data コメント詳細データ
 	 */
-	public void setData(DataLists data) {
+	public void setData(ChatData data) {
 		this.data = data;
 	}
 

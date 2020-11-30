@@ -18,7 +18,7 @@ import org.CLI.MenuData.MenuExcute.easySetup;
 import org.DataBase.DocumentDatabase;
 import org.DataBase.NetworkDocumentDatabase;
 import org.DataBase.NoSQLDocumentFormatXml;
-import org.Datas.DataLists;
+import org.Datas.ChatData;
 import org.Date.CalcDate;
 import org.Readers.FileRead;
 import org.Readers.Directory.DirectoryUseSearch;
@@ -131,7 +131,7 @@ public class TodayReadExecution {
 			// 読み取りに必要なクラス
 			FileRead fr;
 			// 一時保存用の領域
-			ArrayList<DataLists> tmp;
+			ArrayList<ChatData> tmp;
 			// Console Execution Express
 			CEExpress cee = new CEExpress();
 			// プロパティの値

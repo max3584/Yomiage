@@ -21,7 +21,7 @@ public class Debugs {
 		
 		//insert datas
 		TabDatas td = new TabDatas();
-		ArrayList<DataLists> dl = new ArrayList<DataLists>();
+		ArrayList<ChatData> dl = new ArrayList<ChatData>();
 		
 		System.out.println(sdf.format(date));
 		
@@ -46,7 +46,7 @@ public class Debugs {
 					System.out.println("debug size :" + dump.length);
 					
 					if (dump.length == 6) {
-						dl.add( new DataLists(dump[0], dump[1], dump[2], dump[3], dump[4], dump[5]));
+						dl.add( new ChatData(dump[0], dump[1], dump[2], dump[3], dump[4], dump[5]));
 					} else {
 						String prevComment = dl.get(dl.size() - 1).getComment();
 						String dumpComment = "";

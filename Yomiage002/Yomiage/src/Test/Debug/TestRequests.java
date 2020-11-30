@@ -6,7 +6,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 import org.CLI.CEExpress;
-import org.Datas.DataLists;
+import org.Datas.ChatData;
 import org.Readers.FileRead;
 
 public class TestRequests {
@@ -38,7 +38,7 @@ public class TestRequests {
 
 		try {
 			FileRead fr = new FileRead(dir, Charset.forName("UTF-16LE"));
-			ArrayList<DataLists> list = fr.formatRead(6);
+			ArrayList<ChatData> list = fr.formatRead(6);
 
 			for (int i = 0; i < list.size(); i++) {
 				System.out.println(String.format("date:%s\tno:%s\tgroup:%s\tsirial:%s\tuser:%s\tcomment:%s",

@@ -42,7 +42,7 @@ public class DataContainer {
 	 * @return データベースのレコードのリスト
 	 * @exception SQLException SQLが実行できない場合に発生
 	 */
-	public ArrayList<String> update(String sql) throws SQLException {
+	public ArrayList<String> ReferenceDataRequest(String sql) throws SQLException {
 		var data = new ArrayList<String>();
 		ResultSet result = this.db.SearchSQLExecute(sql);
 		while (result.next()) {

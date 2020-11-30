@@ -12,7 +12,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import org.DataBase.DBAccess;
-import org.Datas.DataLists;
+import org.Datas.ChatData;
 import org.Date.CalcDate;
 import old.Readers.FileReadThred;
 import org.Readers.Directory.DirectoryUseSearch;
@@ -224,7 +224,7 @@ public class Initialized {
 	 *          また、これを実行する前にデータベースを実行可能状態にしてから実行してください
 	 * @exception NullPointerException データベースが存在しない
 	 */
-	public void UpdateDatabase(ArrayList<DataLists> list) {
+	public void UpdateDatabase(ArrayList<ChatData> list) {
 		DatabaseInsert di = new DatabaseInsert();
 		for (int i = 0; i < list.size(); i++) {
 			String[] values = { list.get(i).getDate(), list.get(i).getNo(), list.get(i).getGroup(),

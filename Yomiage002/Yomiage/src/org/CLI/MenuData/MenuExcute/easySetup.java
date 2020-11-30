@@ -25,7 +25,7 @@ public class easySetup implements Runnable {
 	private String properties;
 
 	/**
-	 *  固定の入力値に対して固定の出力地にするような設定(final設定)
+	 *  固定の入力値に対して固定の出力値にするような設定(final設定)
 	 */
 	private final String[][] dataInitialize = { { "all", "public", "party", "private", "team", "group", "none" },
 			{ "any", "PUBLIC", "PARTY", "REPLY", "GUILD", "GROUP", "NONE" } };

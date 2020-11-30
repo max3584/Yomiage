@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-import org.Datas.DataLists;
+import org.Datas.ChatData;
 import org.Datas.TabDatas;
 import old.Encode.Sanitization;
 
@@ -31,7 +31,7 @@ public class FileReadThred implements Runnable {
 		//sanitization class
 		Sanitization san = new Sanitization();
 		// datalist init(一時保存用)
-		ArrayList<DataLists> dl = new ArrayList<DataLists>();
+		ArrayList<ChatData> dl = new ArrayList<ChatData>();
 		try {
 			FileRead fr = new FileRead(this.dir, StandardCharsets.UTF_16LE);
 			TabDatas td = new TabDatas();
@@ -41,7 +41,7 @@ public class FileReadThred implements Runnable {
 					String[] dump = td.TabInsert(msg);
 
 					if (dump.length == 6) {
-						dl.add(new DataLists(dump[0], dump[1], dump[2], dump[3], dump[4], dump[5]));
+						dl.add(new ChatData(dump[0], dump[1], dump[2], dump[3], dump[4], dump[5]));
 					} else {
 						if (dl.size() == 0) {
 							continue;
@@ -68,7 +68,7 @@ public class FileReadThred implements Runnable {
 		 */
 		String AllSql="";
 		
-		for (DataLists dtl : dl) {
+		for (ChatData dtl : dl) {
 			// sqlformat
 			String username = san.sanitiza2(dtl.getUser());
 			String comment = san.sanitiza2(dtl.getComment());

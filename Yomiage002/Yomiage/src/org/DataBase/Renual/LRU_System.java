@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import org.DataBase.DBAccess;
-import org.Datas.DataLists;
+import org.Datas.ChatData;
 import org.Datas.TempDataSave;
 
 /**
@@ -44,7 +44,7 @@ public class LRU_System {
 	 * 分析用のリストにコメント詳細データ追加
 	 * @param data コメント詳細データ
 	 */
-	public void addData(DataLists data) {
+	public void addData(ChatData data) {
 		this.tds.add(new TempDataSave(data));
 
 	}
